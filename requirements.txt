@@ -1,0 +1,23 @@
+# Ansible and Catalyst Center Requirements
+ansible>=6.0.0
+ansible-core>=2.13.0
+requests>=2.25.1
+urllib3>=1.26.5
+dnspython>=2.1.0
+jmespath>=0.10.0
+
+# Catalyst Center Ansible Collection
+# Install using: ansible-galaxy collection install cisco.dnac
+
+# Optional - for enhanced YAML processing
+PyYAML>=6.0
+
+# Optional - for JSON schema validation
+jsonschema>=3.2.0
+
+# Optional - for enhanced template rendering
+Jinja2>=3.0.0
+
+# Optional - for network device validation
+netaddr>=0.8.0
+ipaddress>=1.0.23
