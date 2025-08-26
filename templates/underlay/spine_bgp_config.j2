@@ -1,0 +1,87 @@
+{#
+BGP Underlay Configuration Template for Spine Devices
+This template generates BGP configuration for spine switches in EVPN fabric
+#}
+
+{# Basic BGP Configuration #}
+router bgp {{ fabric.underlay.as_number }}
+ bgp router-id {{ device.interfaces.loopback0 | ipaddr('address') }}
+ bgp log-neighbor-changes
+ no bgp default ipv4-unicast
+ 
+{# BGP Neighbors - Leaf Devices #}
+{% for leaf in devices.leaf %}
+{% for uplink in leaf.interfaces.uplinks %}
+{% if uplink.neighbor == device.hostname %}
+ neighbor {{ leaf.interfaces.loopback0 | ipaddr('address') }} remote-as {{ fabric.underlay.as_number }}
+ neighbor {{ leaf.interfaces.loopback0 | ipaddr('address') }} description {{ leaf.hostname }}
+ neighbor {{ leaf.interfaces.loopback0 | ipaddr('address') }} update-source {{ fabric.underlay.bgp.update_source }}
+ neighbor {{ leaf.interfaces.loopback0 | ipaddr('address') }} ebgp-multihop {{ fabric.underlay.bgp.ebgp_multihop }}
+{% endif %}
+{% endfor %}
+{% endfor %}
+
+{# BGP Neighbors - Border Devices #}
+{% if devices.border is defined %}
+{% for border in devices.border %}
+ neighbor {{ border.interfaces.loopback0 | ipaddr('address') }} remote-as {{ fabric.underlay.as_number }}
+ neighbor {{ border.interfaces.loopback0 | ipaddr('address') }} description {{ border.hostname }}
+ neighbor {{ border.interfaces.loopback0 | ipaddr('address') }} update-source {{ fabric.underlay.bgp.update_source }}
+ neighbor {{ border.interfaces.loopback0 | ipaddr('address') }} ebgp-multihop {{ fabric.underlay.bgp.ebgp_multihop }}
+{% endfor %}
+{% endif %}
+
+{# IPv4 Unicast Address Family #}
+ address-family ipv4 unicast
+{% for leaf in devices.leaf %}
+{% for uplink in leaf.interfaces.uplinks %}
+{% if uplink.neighbor == device.hostname %}
+  neighbor {{ leaf.interfaces.loopback0 | ipaddr('address') }} activate
+  neighbor {{ leaf.interfaces.loopback0 | ipaddr('address') }} send-community both
+{% endif %}
+{% endfor %}
+{% endfor %}
+{% if devices.border is defined %}
+{% for border in devices.border %}
+  neighbor {{ border.interfaces.loopback0 | ipaddr('address') }} activate
+  neighbor {{ border.interfaces.loopback0 | ipaddr('address') }} send-community both
+{% endfor %}
+{% endif %}
+  network {{ device.interfaces.loopback0 }}
+ exit-address-family
+
+{# L2VPN EVPN Address Family #}
+ address-family l2vpn evpn
+{% for leaf in devices.leaf %}
+{% for uplink in leaf.interfaces.uplinks %}
+{% if uplink.neighbor == device.hostname %}
+  neighbor {{ leaf.interfaces.loopback0 | ipaddr('address') }} activate
+  neighbor {{ leaf.interfaces.loopback0 | ipaddr('address') }} send-community both
+  neighbor {{ leaf.interfaces.loopback0 | ipaddr('address') }} route-reflector-client
+{% endif %}
+{% endfor %}
+{% endfor %}
+{% if devices.border is defined %}
+{% for border in devices.border %}
+  neighbor {{ border.interfaces.loopback0 | ipaddr('address') }} activate
+  neighbor {{ border.interfaces.loopback0 | ipaddr('address') }} send-community both
+  neighbor {{ border.interfaces.loopback0 | ipaddr('address') }} route-reflector-client
+{% endfor %}
+{% endif %}
+ exit-address-family
+
+{# Interface Configuration #}
+{% for downlink in device.interfaces.downlinks %}
+interface {{ downlink.interface }}
+ description {{ downlink.neighbor }}
+ no switchport
+ ip address {{ fabric.underlay.addressing.link_pool | ipsubnet(30, loop.index0 * 2) | ipaddr('1') }} {{ fabric.underlay.addressing.link_pool | ipsubnet(30, loop.index0 * 2) | ipaddr('netmask') }}
+ ip ospf network point-to-point
+ no shutdown
+{% endfor %}
+
+{# Loopback Interface #}
+interface {{ fabric.underlay.bgp.router_id_loopback }}
+ description BGP Router ID
+ ip address {{ device.interfaces.loopback0 }}
+ no shutdown

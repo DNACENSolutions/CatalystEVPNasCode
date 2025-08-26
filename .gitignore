@@ -1,0 +1,73 @@
+# IDE and Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+env.bak/
+venv.bak/
+python3env/
+
+# Ansible
+ansible_inventory/
+*.retry
+.vault_pass
+vault_password_file
+
+# AI Assistant and Demo files
+ai-assistant-*
+demo_lab/
+*demo*
+
+# Logs
+*.log
+logs/
+ansible.log
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Sensitive files
+*.pem
+*.key
+*.crt
+*.p12
+secrets.yml
+vault.yml
+*_vault.yml
+
+# Backup files
+*.bak
+*.backup
+*.orig
+*~
+
+# Temporary files
+tmp/
+temp/
+.tmp/
+
+# Configuration files with sensitive data
+inventory/group_vars/all/vault.yml
+vars/vault.yml
+host_vars/*/vault.yml
+
+# Ignore roles
+roles/

@@ -1,0 +1,170 @@
+{#
+EVPN Border Device Configuration Template
+This template configures EVPN VXLAN for border/edge devices
+Includes BGP EVPN, VXLAN, and inter-site connectivity
+#}
+
+{# Enable required features #}
+feature bgp
+feature nv overlay
+feature vn-segment-vlan-based
+feature interface-vlan
+feature hsrp
+feature lacp
+feature vpc
+feature nxapi
+feature bash-shell
+feature scp-server
+
+{# VXLAN Global Configuration #}
+fabric forwarding anycast-gateway-mac 0001.0001.0001
+ip pim rp-address {{ device.loopback0 }} group-list 224.0.0.0/4
+ip pim anycast-rp {{ device.loopback0 }} {{ device.loopback0 }}
+
+{# Loopback Interfaces #}
+interface loopback0
+  description "Router ID and VTEP Source"
+  ip address {{ device.loopback0 }}/32
+  ip pim sparse-mode
+
+interface loopback100
+  description "Border Gateway Interface"
+  ip address {{ device.vtep_ip }}/32
+  ip pim sparse-mode
+
+{# NVE Interface Configuration #}
+interface nve1
+  no shutdown
+  description "VXLAN Tunnel Interface"
+  host-reachability protocol bgp
+  source-interface loopback0
+  multisite border-gateway interface loopback100
+{% for vrf in site.vrfs %}
+  member vni {{ vrf.vni }}
+    associate-vrf
+{% endfor %}
+{% for vlan in site.vlans %}
+  member vni {{ vlan.vni }}
+    suppress-arp
+    ingress-replication protocol bgp
+{% endfor %}
+
+{# VRF Configuration #}
+{% for vrf in site.vrfs %}
+vrf context {{ vrf.vrf_name }}
+  vni {{ vrf.vni }}
+  rd {{ device.asn }}:{{ vrf.vni }}
+{% for rt in vrf.rt_import %}
+  address-family ipv4 unicast
+    route-target import {{ rt }}
+{% endfor %}
+{% for rt in vrf.rt_export %}
+    route-target export {{ rt }}
+{% endfor %}
+  address-family ipv6 unicast
+{% for rt in vrf.rt_import %}
+    route-target import {{ rt }}
+{% endfor %}
+{% for rt in vrf.rt_export %}
+    route-target export {{ rt }}
+{% endfor %}
+
+{% endfor %}
+
+{# VLAN Configuration #}
+{% for vlan in site.vlans %}
+vlan {{ vlan.vlan_id }}
+  name {{ vlan.vlan_name }}
+  vn-segment {{ vlan.vni }}
+
+interface Vlan{{ vlan.vlan_id }}
+  description "{{ vlan.vlan_name }} Gateway"
+  no shutdown
+  vrf member {{ vlan.vrf }}
+  ip address {{ vlan.gateway }}/{{ vlan.subnet.split('/')[1] }}
+  fabric forwarding mode anycast-gateway
+  
+{% endfor %}
+
+{# BGP Configuration #}
+router bgp {{ device.asn }}
+  router-id {{ device.loopback0 }}
+  bestpath as-path multipath-relax
+  bestpath compare-routerid
+  
+  {# IPv4 Unicast Address Family #}
+  address-family ipv4 unicast
+    redistribute direct route-map DIRECT
+    maximum-paths 64
+    maximum-paths ibgp 64
+  
+  {# L2VPN EVPN Address Family #}
+  address-family l2vpn evpn
+    retain route-target all
+    maximum-paths 64
+    maximum-paths ibgp 64
+
+  {# BGP Neighbors (Spines) #}
+{% for spine in site.devices.spines %}
+  neighbor {{ spine.loopback0 }}
+    remote-as {{ device.asn }}
+    description "iBGP to {{ spine.hostname }}"
+    update-source loopback0
+    address-family ipv4 unicast
+      send-community extended
+    address-family l2vpn evpn
+      send-community extended
+{% endfor %}
+
+  {# eBGP Neighbors for Multi-site (if configured) #}
+{% if external_bgp_peers is defined %}
+{% for peer in external_bgp_peers %}
+  neighbor {{ peer.ip }}
+    remote-as {{ peer.asn }}
+    description "eBGP to {{ peer.description }}"
+    address-family ipv4 unicast
+      send-community extended
+    address-family l2vpn evpn
+      send-community extended
+{% endfor %}
+{% endif %}
+
+  {# VRF Address Families #}
+{% for vrf in site.vrfs %}
+  vrf {{ vrf.vrf_name }}
+    address-family ipv4 unicast
+      advertise l2vpn evpn
+      redistribute direct route-map DIRECT
+{% endfor %}
+
+{# Route Maps #}
+route-map DIRECT permit 10
+  match interface loopback0 loopback100
+
+{# EVPN Configuration #}
+evpn
+{% for vlan in site.vlans %}
+  vni {{ vlan.vni }} l2
+    rd {{ device.asn }}:{{ vlan.vni }}
+    route-target import {{ device.asn }}:{{ vlan.vni }}
+    route-target export {{ device.asn }}:{{ vlan.vni }}
+{% endfor %}
+
+{# Multicast Configuration #}
+ip pim rp-address {{ device.loopback0 }} group-list 224.0.0.0/4
+ip pim ssm range 232.0.0.0/8
+
+{# Interface Templates for Access Ports #}
+interface Ethernet1/1-48
+  description "Access Port Template"
+  switchport mode access
+  switchport access vlan {{ site.vlans[0].vlan_id }}
+  spanning-tree port type edge
+  spanning-tree bpduguard enable
+
+{# Management and Monitoring #}
+snmp-server community {{ global_settings.credentials.snmp_v2_read_credentials[0].community }} ro
+logging server {{ site.network_settings.syslog_server[0].server_ip }}
+ntp server {{ site.network_settings.ntp_server[0] }}
+
+{# End of Border Template #}

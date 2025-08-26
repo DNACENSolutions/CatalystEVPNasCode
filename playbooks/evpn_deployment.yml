@@ -1,0 +1,105 @@
+---
+# Master BGP EVPN Deployment Playbook
+# This playbook orchestrates the complete EVPN fabric deployment using Catalyst Center
+# 
+# Execution Order:
+# 1. ISE Integration
+# 2. Site Hierarchy Design
+# 3. Global Credentials
+# 4. Device Discovery
+# 5. Site Assignment
+# 6. LAN Automation
+# 7. Device Provisioning
+# 8. Template Creation & Deployment
+# 9. Validation
+
+- name: "BGP EVPN Fabric Deployment - Complete Workflow"
+  hosts: catalyst_center
+  connection: local
+  gather_facts: false
+  vars_files:
+    - ../vars/global.yml
+    - ../data/bgp_evpn_site_01.yml
+  
+  tasks:
+    - name: "Display deployment banner"
+      debug:
+        msg: |
+          ================================================================================
+          Starting BGP EVPN Fabric Deployment
+          ================================================================================
+          Sites to be deployed: {{ sites | map(attribute='site_name') | list | join(', ') }}
+          Catalyst Center: {{ catalyst_center_host }}
+          ================================================================================
+
+    # Phase 1: ISE Integration
+    - name: "Phase 1: Configure ISE Integration"
+      include_role:
+        name: catalyst_center_ise_aaa_integration
+      tags: ['phase1', 'ise']
+
+    # Phase 2: Site Hierarchy Design  
+    - name: "Phase 2: Create Site Hierarchy"
+      include_role:
+        name: catalyst_center_site_design
+      tags: ['phase2', 'sites']
+
+    # # Phase 3: Global Credentials
+    - name: "Phase 3: Configure Global Credentials"
+      include_role:
+        name: catalyst_center_device_credentials
+      tags: ['phase3', 'credentials']
+
+    # Phase 4: Network Settings
+    - name: "Phase 4: Configure Network Settings"
+      include_tasks: playbooks/04_network_settings.yml
+      tags: ['phase4', 'network']
+
+    # Phase 5: IP Pool Management
+    - name: "Phase 5: Configure IP Pools"
+      include_tasks: playbooks/05_ip_pools.yml
+      tags: ['phase5', 'pools']
+
+    # Phase 6: Device Discovery
+    - name: "Phase 6: Discover Seed Devices"
+      include_tasks: playbooks/06_device_discovery.yml
+      tags: ['phase6', 'discovery']
+
+    # Phase 7: Site Assignment
+    - name: "Phase 7: Assign Devices to Sites"
+      include_tasks: playbooks/07_site_assignment.yml
+      tags: ['phase7', 'assignment']
+
+    # Phase 8: LAN Automation
+    - name: "Phase 8: Execute LAN Automation"
+      include_tasks: playbooks/08_lan_automation.yml
+      tags: ['phase8', 'automation']
+
+    # Phase 9: Device Provisioning
+    - name: "Phase 9: Provision All Devices"
+      include_tasks: playbooks/09_device_provisioning.yml
+      tags: ['phase9', 'provision']
+
+    # Phase 10: Template Creation
+    - name: "Phase 10: Create EVPN Templates"
+      include_tasks: playbooks/10_template_creation.yml
+      tags: ['phase10', 'templates']
+
+    # Phase 11: Template Deployment
+    - name: "Phase 11: Deploy Templates to Devices"
+      include_tasks: playbooks/11_template_deployment.yml
+      tags: ['phase11', 'deploy']
+
+    # Phase 12: Validation
+    - name: "Phase 12: Validate EVPN Underlay and Overlay"
+      include_tasks: playbooks/12_validation.yml
+      tags: ['phase12', 'validate']
+
+    - name: "Display deployment completion banner"
+      debug:
+        msg: |
+          ================================================================================
+          BGP EVPN Fabric Deployment Completed Successfully!
+          ================================================================================
+          All phases completed. Run validation playbook to verify the deployment.
+          ================================================================================
