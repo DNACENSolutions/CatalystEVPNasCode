@@ -17,9 +17,9 @@
   hosts: catalyst_center
   connection: local
   gather_facts: false
-  vars_files:
-    - ../vars/global.yml
-    - ../data/bgp_evpn_site_01.yml
+  #vars_files:
+  #  - ../vars/global.yml
+  #  - ../data/bgp_evpn_site_01.yml
   
   tasks:
     - name: "Display deployment banner"
@@ -36,64 +36,73 @@
     - name: "Phase 1: Configure ISE Integration"
       include_role:
         name: catalyst_center_ise_aaa_integration
-      tags: ['phase1', 'ise']
+      tags: ['ise']
 
     # Phase 2: Site Hierarchy Design  
     - name: "Phase 2: Create Site Hierarchy"
       include_role:
         name: catalyst_center_site_design
-      tags: ['phase2', 'sites']
+      tags: ['sites']
 
     # # Phase 3: Global Credentials
     - name: "Phase 3: Configure Global Credentials"
       include_role:
         name: catalyst_center_device_credentials
-      tags: ['phase3', 'credentials']
+      tags: ['credentials']
 
     # Phase 4: Network Settings
     - name: "Phase 4: Configure Network Settings"
-      include_tasks: playbooks/04_network_settings.yml
-      tags: ['phase4', 'network']
+      include_role:
+        name: catalyst_center_network_settings
+      tags: ['network']
 
     # Phase 5: IP Pool Management
     - name: "Phase 5: Configure IP Pools"
-      include_tasks: playbooks/05_ip_pools.yml
-      tags: ['phase5', 'pools']
+      include_role:
+        name: catalyst_center_network_settings
+      tags: ['ippools']
 
     # Phase 6: Device Discovery
     - name: "Phase 6: Discover Seed Devices"
-      include_tasks: playbooks/06_device_discovery.yml
-      tags: ['phase6', 'discovery']
+      include_role:
+        name: catalyst_center_device_discovery
+      tags: ['discovery']
 
     # Phase 7: Site Assignment
     - name: "Phase 7: Assign Devices to Sites"
-      include_tasks: playbooks/07_site_assignment.yml
-      tags: ['phase7', 'assignment']
+      include_role:
+        name: catalyst_center_device_provision
+      tags: ['assignment']
 
     # Phase 8: LAN Automation
     - name: "Phase 8: Execute LAN Automation"
-      include_tasks: playbooks/08_lan_automation.yml
-      tags: ['phase8', 'automation']
+      include_role:
+        name: catalyst_center_lan_automation
+      tags: ['lanautomation']
 
     # Phase 9: Device Provisioning
     - name: "Phase 9: Provision All Devices"
-      include_tasks: playbooks/09_device_provisioning.yml
-      tags: ['phase9', 'provision']
+      include_role:
+        name: catalyst_center_device_provision
+      tags: ['provision']
 
     # Phase 10: Template Creation
     - name: "Phase 10: Create EVPN Templates"
-      include_tasks: playbooks/10_template_creation.yml
-      tags: ['phase10', 'templates']
+      include_role:
+        name: catalyst_center_template_creation
+      tags: ['templates']
 
     # Phase 11: Template Deployment
     - name: "Phase 11: Deploy Templates to Devices"
-      include_tasks: playbooks/11_template_deployment.yml
-      tags: ['phase11', 'deploy']
+      include_role:
+        name: catalyst_center_template_deployment
+      tags: ['deploy']
 
     # Phase 12: Validation
     - name: "Phase 12: Validate EVPN Underlay and Overlay"
-      include_tasks: playbooks/12_validation.yml
-      tags: ['phase12', 'validate']
+      include_role:
+        name: catalyst_center_evpn_validation
+      tags: ['validate']
 
     - name: "Display deployment completion banner"
       debug:

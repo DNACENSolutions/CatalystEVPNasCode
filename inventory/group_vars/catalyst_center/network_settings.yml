@@ -1,0 +1,83 @@
+---
+# Network Settings Configuration
+# Variables for catalyst_center_network_settings role
+
+network_settings_details:
+  # Global Network Settings
+  - site_name_hierarchy: "Global"
+    network_settings:
+      dhcp_server:
+        - "10.1.1.10"
+        - "10.1.1.11"
+      dns_server:
+        primary_dns_server: "8.8.8.8"
+        secondary_dns_server: "8.8.4.4"
+      syslog_server:
+        - server_ip: "10.1.1.100"
+          configure_dnac_ip: true
+      snmp_server:
+        - server_ip: "10.1.1.101"
+          configure_dnac_ip: true
+      netflow_collector:
+        - server_ip: "10.1.1.102"
+          port: 9995
+      ntp_server:
+        - "pool.ntp.org"
+        - "time.nist.gov"
+      timezone: "America/Los_Angeles"
+      domain_name: "company.local"
+      
+  # San Jose Site Network Settings
+  - site_name_hierarchy: "Global/USA/SAN JOSE"
+    network_settings:
+      dhcp_server:
+        - "10.10.1.10"
+        - "10.10.1.11"
+      dns_server:
+        primary_dns_server: "10.10.1.53"
+        secondary_dns_server: "8.8.8.8"
+      syslog_server:
+        - server_ip: "10.10.1.100"
+          configure_dnac_ip: false
+      snmp_server:
+        - server_ip: "10.10.1.101"
+          configure_dnac_ip: false
+      netflow_collector:
+        - server_ip: "10.10.1.102"
+          port: 9995
+      ntp_server:
+        - "10.10.1.123"
+        - "pool.ntp.org"
+      timezone: "America/Los_Angeles"
+      domain_name: "sanjose.company.local"
+      
+  # San Francisco Site Network Settings  
+  - site_name_hierarchy: "Global/USA/SAN-FRANCISCO"
+    network_settings:
+      dhcp_server:
+        - "10.20.1.10"
+        - "10.20.1.11"
+      dns_server:
+        primary_dns_server: "10.20.1.53"
+        secondary_dns_server: "8.8.8.8"
+      syslog_server:
+        - server_ip: "10.20.1.100"
+          configure_dnac_ip: false
+      snmp_server:
+        - server_ip: "10.20.1.101"
+          configure_dnac_ip: false
+      netflow_collector:
+        - server_ip: "10.20.1.102"
+          port: 9995
+      ntp_server:
+        - "10.20.1.123"
+        - "pool.ntp.org"
+      timezone: "America/Los_Angeles"
+      domain_name: "sanfrancisco.company.local"
+
+# Network Settings Configuration Options
+network_settings_config:
+  apply_to_device: true
+  override_global_settings: false
+  wait_for_completion: true
+  max_wait_time: 300
