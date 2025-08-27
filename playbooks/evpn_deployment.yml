@@ -18,7 +18,6 @@
   connection: local
   gather_facts: false
   #vars_files:
-  #  - ../vars/global.yml
   #  - ../data/bgp_evpn_site_01.yml
   
   tasks:
@@ -28,7 +27,7 @@
           ================================================================================
           Starting BGP EVPN Fabric Deployment
           ================================================================================
-          Sites to be deployed: {{ sites | map(attribute='site_name') | list | join(', ') }}
+          Sites to be deployed: {{ design_sites | map(attribute='site') | list | join(', ') }}
           Catalyst Center: {{ catalyst_center_host }}
           ================================================================================
 
@@ -36,73 +35,77 @@
     - name: "Phase 1: Configure ISE Integration"
       include_role:
         name: catalyst_center_ise_aaa_integration
-      tags: ['ise']
+      tags:
+        - ise
+        - validate
 
     # Phase 2: Site Hierarchy Design  
     - name: "Phase 2: Create Site Hierarchy"
       include_role:
         name: catalyst_center_site_design
-      tags: ['sites']
+      tags:
+      - sites
+      - validate
 
-    # # Phase 3: Global Credentials
-    - name: "Phase 3: Configure Global Credentials"
-      include_role:
-        name: catalyst_center_device_credentials
-      tags: ['credentials']
+    # # # Phase 3: Global Credentials
+    # - name: "Phase 3: Configure Global Credentials"
+    #   include_role:
+    #     name: catalyst_center_device_credentials
+    #   tags: ['credentials']
 
-    # Phase 4: Network Settings
-    - name: "Phase 4: Configure Network Settings"
-      include_role:
-        name: catalyst_center_network_settings
-      tags: ['network']
+    # # Phase 4: Network Settings
+    # - name: "Phase 4: Configure Network Settings"
+    #   include_role:
+    #     name: catalyst_center_network_settings
+    #   tags: ['network']
 
-    # Phase 5: IP Pool Management
-    - name: "Phase 5: Configure IP Pools"
-      include_role:
-        name: catalyst_center_network_settings
-      tags: ['ippools']
+    # # Phase 5: IP Pool Management
+    # - name: "Phase 5: Configure IP Pools"
+    #   include_role:
+    #     name: catalyst_center_network_settings
+    #   tags: ['ippools']
 
-    # Phase 6: Device Discovery
-    - name: "Phase 6: Discover Seed Devices"
-      include_role:
-        name: catalyst_center_device_discovery
-      tags: ['discovery']
+    # # Phase 6: Device Discovery
+    # - name: "Phase 6: Discover Seed Devices"
+    #   include_role:
+    #     name: catalyst_center_device_discovery
+    #   tags: ['discovery']
 
-    # Phase 7: Site Assignment
-    - name: "Phase 7: Assign Devices to Sites"
-      include_role:
-        name: catalyst_center_device_provision
-      tags: ['assignment']
+    # # Phase 7: Site Assignment
+    # - name: "Phase 7: Assign Devices to Sites"
+    #   include_role:
+    #     name: catalyst_center_device_provision
+    #   tags: ['assignment']
 
-    # Phase 8: LAN Automation
-    - name: "Phase 8: Execute LAN Automation"
-      include_role:
-        name: catalyst_center_lan_automation
-      tags: ['lanautomation']
+    # # Phase 8: LAN Automation
+    # - name: "Phase 8: Execute LAN Automation"
+    #   include_role:
+    #     name: catalyst_center_lan_automation
+    #   tags: ['lanautomation']
 
-    # Phase 9: Device Provisioning
-    - name: "Phase 9: Provision All Devices"
-      include_role:
-        name: catalyst_center_device_provision
-      tags: ['provision']
+    # # Phase 9: Device Provisioning
+    # - name: "Phase 9: Provision All Devices"
+    #   include_role:
+    #     name: catalyst_center_device_provision
+    #   tags: ['provision']
 
-    # Phase 10: Template Creation
-    - name: "Phase 10: Create EVPN Templates"
-      include_role:
-        name: catalyst_center_template_creation
-      tags: ['templates']
+    # # Phase 10: Template Creation
+    # - name: "Phase 10: Create EVPN Templates"
+    #   include_role:
+    #     name: catalyst_center_template_creation
+    #   tags: ['templates']
 
-    # Phase 11: Template Deployment
-    - name: "Phase 11: Deploy Templates to Devices"
-      include_role:
-        name: catalyst_center_template_deployment
-      tags: ['deploy']
+    # # Phase 11: Template Deployment
+    # - name: "Phase 11: Deploy Templates to Devices"
+    #   include_role:
+    #     name: catalyst_center_template_deployment
+    #   tags: ['deploy']
 
-    # Phase 12: Validation
-    - name: "Phase 12: Validate EVPN Underlay and Overlay"
-      include_role:
-        name: catalyst_center_evpn_validation
-      tags: ['validate']
+    # # Phase 12: Validation
+    # - name: "Phase 12: Validate EVPN Underlay and Overlay"
+    #   include_role:
+    #     name: catalyst_center_evpn_validation
+    #   tags: ['validate']
 
     - name: "Display deployment completion banner"
       debug:

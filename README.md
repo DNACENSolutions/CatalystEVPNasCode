@@ -29,7 +29,7 @@ Automated BGP EVPN fabric deployment using Catalyst Center (DNAC) and Ansible wo
 
 1. **Clone the repository:**
    ```bash
-   git clone <repository-url>
+   git clone git@github.com:DNACENSolutions/CatalystEVPNasCode.git
    cd CatalystEVPNasCode
    ```
 
