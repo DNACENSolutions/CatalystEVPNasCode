@@ -43,13 +43,13 @@ check_prerequisites() {
     fi
     
     # Check if required files exist
-    if [ ! -f "$SCRIPT_DIR/evpn_deployment.yml" ]; then
+    if [ ! -f "$SCRIPT_DIR/playbooks/evpn_deployment.yml" ]; then
         print_error "Master playbook evpn_deployment.yml not found!"
         exit 1
     fi
-    
-    if [ ! -f "$SCRIPT_DIR/data/sites.yml" ]; then
-        print_error "Site configuration file data/sites.yml not found!"
+
+    if [ ! -f "$SCRIPT_DIR/inventory/group_vars/catalyst_center/site_design.yml" ]; then
+        print_error "Site configuration file inventory/group_vars/catalyst_center/site_design.yml not found!"
         exit 1
     fi
     
@@ -64,7 +64,7 @@ check_prerequisites() {
 # Function to validate playbook syntax
 validate_syntax() {
     print_status "Validating playbook syntax..."
-    if ansible-playbook "$SCRIPT_DIR/evpn_deployment.yml" --syntax-check; then
+    if ansible-playbook "$SCRIPT_DIR/playbooks/evpn_deployment.yml" --syntax-check; then
         print_success "Playbook syntax is valid"
     else
         print_error "Playbook syntax validation failed"
@@ -115,8 +115,8 @@ execute_phase() {
     
     print_status "Starting $description"
     echo "======================================================================"
-    
-    if ansible-playbook "$SCRIPT_DIR/evpn_deployment.yml" --tags "$tags" -v; then
+
+    if ansible-playbook "$SCRIPT_DIR/playbooks/evpn_deployment.yml" --tags "$tags" -vvvv; then
         print_success "$description completed successfully"
     else
         print_error "$description failed"
@@ -133,7 +133,7 @@ case "$1" in
         check_prerequisites
         validate_syntax
         print_status "Starting complete EVPN fabric deployment..."
-        ansible-playbook "$SCRIPT_DIR/evpn_deployment.yml" -v
+        ansible-playbook "$SCRIPT_DIR/playbooks/evpn_deployment.yml" -v
         print_success "EVPN fabric deployment completed successfully!"
         ;;
     "phase1")
@@ -174,7 +174,7 @@ case "$1" in
     "phase8")
         check_prerequisites
         validate_syntax
-        execute_phase "8" "Phase 8: LAN Automation" "phase8,automation"
+        execute_phase "8" "Phase 8: LAN Automation" "phase8,lan_automation"
         ;;
     "phase9")
         check_prerequisites
@@ -189,7 +189,7 @@ case "$1" in
     "phase11")
         check_prerequisites
         validate_syntax
-        execute_phase "11" "Phase 11: Template Deployment" "phase11,deploy"
+        execute_phase "11" "Phase 11: Template Deployment" "phase11,template_deploy"
         ;;
     "phase12")
         check_prerequisites
