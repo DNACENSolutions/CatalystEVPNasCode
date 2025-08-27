@@ -20,7 +20,7 @@ Automated BGP EVPN fabric deployment using Catalyst Center (DNAC) and Ansible wo
 - Cisco DNAC Ansible Collection
 
 ### Infrastructure Requirements
-- Catalyst Center (DNAC) >= 2.3.7.6
+- Catalyst Center (DNAC) >= 2.3.7.9
 - Cisco ISE for 802.1X authentication
 - Catalyst 9000 series switches
 - Network connectivity between Ansible control node and Catalyst Center
@@ -45,9 +45,9 @@ Automated BGP EVPN fabric deployment using Catalyst Center (DNAC) and Ansible wo
 
 4. **Set up environment variables:**
    ```bash
-   export CATALYST_CENTER_HOSTNAME="your-dnac-hostname"
-   export CATALYST_CENTER_USERNAME="admin"
-   export CATALYST_CENTER_PASSWORD="${CATALYST_CENTER_PASSWORD:?Set this from a secret manager}"
+   export HOSTNAME="your-dnac-hostname"
+   export USERNAME="admin"
+   export PASSWORD="${CATALYST_CENTER_PASSWORD:?Set this from a secret manager}"
    ```
 
 ## 📖 Configuration
@@ -139,22 +139,11 @@ ansible-playbook evpn_deployment.yml --tags "phase12,validate"
 ## 📁 Project Structure
 
 ```
-CatalystEVPNasCode/
-├── evpn_deployment.yml          # Master deployment playbook
+CatalystEVPNasCode/        # Master deployment playbook
 ├── data/
 │   └── sites.yml                # Complete site configuration
 ├── playbooks/                   # Phase-specific playbooks
-│   ├── 01_ise_integration.yml
-│   ├── 02_site_design.yml
-│   ├── 03_global_credentials.yml
-│   ├── 04_network_settings.yml
-│   ├── 05_ip_pools.yml
-│   ├── 06_device_discovery.yml
-│   ├── 07_site_assignment.yml
-│   ├── 08_lan_automation.yml
-│   ├── 09_device_provisioning.yml
-│   ├── 10_template_creation.yml
-│   ├── 11_template_deployment.yml
+│   ├── evpn_deployment.yml
 │   └── 12_validation.yml
 ├── templates/
 │   └── overlay/                 # Jinja2 configuration templates
@@ -163,8 +152,10 @@ CatalystEVPNasCode/
 │       ├── leaf_evpn_config.j2
 │       └── dot1x_config.j2
 ├── roles/                       # Catalyst Center Ansible roles
-└── vars/
-    └── global.yml               # Global variables
+└── inventory/
+    └── hosts                     # Ansible inventory file
+└── group_vars/
+    └── all.yml               # Global variables
 ```
 
 ## 🔧 Templates

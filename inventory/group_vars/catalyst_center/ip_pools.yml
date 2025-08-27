@@ -1,0 +1,100 @@
+---
+# IP Pool Management Configuration
+# Variables for catalyst_center_reserve_ip_subpool role
+
+reserve_ip_subpool_details:
+  # Global Management Pool
+  - pool_name: "GLOBAL_MANAGEMENT_POOL"
+    pool_type: "Generic"
+    ip_subnet: "10.1.0.0/16"
+    gateway: "10.1.0.1"
+    dhcp_server:
+      - "10.1.1.10"
+      - "10.1.1.11"
+    dns_server:
+      - "8.8.8.8"
+      - "8.8.4.4"
+    
+  # EVPN Loopback Pools
+  - pool_name: "EVPN_LOOPBACK_POOL"
+    pool_type: "Generic"
+    ip_subnet: "10.255.255.0/24"
+    gateway: "10.255.255.1"
+    description: "Loopback interfaces for EVPN fabric"
+    
+  # EVPN P2P Link Pools
+  - pool_name: "EVPN_P2P_POOL"
+    pool_type: "Generic"
+    ip_subnet: "10.254.0.0/16"
+    gateway: "10.254.0.1"
+    description: "Point-to-point links for EVPN underlay"
+    
+  # San Jose Site Pools
+  - pool_name: "SJ_VLAN10_POOL"
+    pool_type: "Generic"
+    ip_subnet: "10.10.10.0/24"
+    gateway: "10.10.10.1"
+    site_name_hierarchy: "Global/USA/SAN JOSE"
+    vlan_id: 10
+    vlan_name: "VLAN_10_DATA"
+    dhcp_server:
+      - "10.10.1.10"
+    dns_server:
+      - "10.10.1.53"
+      
+  - pool_name: "SJ_VLAN20_POOL"
+    pool_type: "Generic"
+    ip_subnet: "10.10.20.0/24"
+    gateway: "10.10.20.1"
+    site_name_hierarchy: "Global/USA/SAN JOSE"
+    vlan_id: 20
+    vlan_name: "VLAN_20_VOICE"
+    dhcp_server:
+      - "10.10.1.10"
+    dns_server:
+      - "10.10.1.53"
+      
+  - pool_name: "SJ_VLAN30_POOL"
+    pool_type: "Generic"
+    ip_subnet: "10.10.30.0/24"
+    gateway: "10.10.30.1"
+    site_name_hierarchy: "Global/USA/SAN JOSE"
+    vlan_id: 30
+    vlan_name: "VLAN_30_GUEST"
+    dhcp_server:
+      - "10.10.1.11"
+    dns_server:
+      - "8.8.8.8"
+      
+  # San Francisco Site Pools
+  - pool_name: "SF_VLAN10_POOL"
+    pool_type: "Generic"
+    ip_subnet: "10.20.10.0/24"
+    gateway: "10.20.10.1"
+    site_name_hierarchy: "Global/USA/SAN-FRANCISCO"
+    vlan_id: 10
+    vlan_name: "VLAN_10_DATA"
+    dhcp_server:
+      - "10.20.1.10"
+    dns_server:
+      - "10.20.1.53"
+      
+  - pool_name: "SF_VLAN20_POOL"
+    pool_type: "Generic"
+    ip_subnet: "10.20.20.0/24"
+    gateway: "10.20.20.1"
+    site_name_hierarchy: "Global/USA/SAN-FRANCISCO"
+    vlan_id: 20
+    vlan_name: "VLAN_20_VOICE"
+    dhcp_server:
+      - "10.20.1.10"
+    dns_server:
+      - "10.20.1.53"
+
+# IP Pool Configuration Options
+ip_pool_config:
+  auto_generate_vni: true
+  vni_range_start: 10000
+  l3_vni_range_start: 50000
+  enable_duplicate_detection: true
+  wait_for_completion: true

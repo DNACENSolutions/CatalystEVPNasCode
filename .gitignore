@@ -71,3 +71,7 @@ host_vars/*/vault.yml
 
 # Ignore roles
 roles/
+
+# Ignore nac_validate
+nac-validate
+nac-validate/

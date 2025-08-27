@@ -1,0 +1,65 @@
+---
+# Global variables for BGP EVPN fabric automation
+# These variables are used across all sites and playbooks
+
+# Common Configuration
+# Use auto-discovery for Python interpreter (recommended)
+# ansible_python_interpreter: auto_silent
+ansible_connection: local
+ansible_gather_facts: false
+
+# Default timeouts and retries
+default_timeout: 300
+default_retries: 3
+default_delay: 30
+deployment_wait_time: 60
+
+# EVPN Fabric Global Defaults
+evpn_fabric_defaults:
+  underlay_protocol: "isis"  # isis or ospf
+  overlay_protocol: "bgp_evpn"
+  vni_range_start: 10000
+  vrf_vni_range_start: 50000
+  multicast_enabled: true
+  anycast_gateway_mac: "0001.0001.0001"
+  
+# ISIS Global Defaults
+isis_global_defaults:
+  domain_password: "cisco123"
+  level: "level-2"
+  metric: 10
+  hello_interval: 10
+  hold_interval: 30
+
+# BGP Global Defaults  
+bgp_global_defaults:
+  as_number_range_start: 65001
+  route_reflector: true
+  bestpath_as_path_multipath_relax: true
+  maximum_paths: 64
+  ebgp_multihop: 255
+  update_source: "loopback0"
+
+# VXLAN Global Defaults
+vxlan_global_defaults:
+  mtu: 9216
+  source_interface: "loopback0"
+  host_reachability: "bgp"
+  suppress_arp: true
+  ingress_replication: true
+  multicast_group_range: "239.1.1.0/25"
+
+# 802.1X Global Defaults
+dot1x_global_defaults:
+  authentication_order: ["dot1x", "mab"]
+  authentication_host_mode: "multi-auth"
+  authentication_port_control: "auto"
+  authentication_periodic: true
+  authentication_timer_reauthenticate: "server"
+  authentication_timer_inactivity: "server"
+  authentication_violation: "restrict"
+
+# Common Network Settings
+common_network_settings:
+  timezone: "America/Los_Angeles"
+  domain_name: "company.local"
