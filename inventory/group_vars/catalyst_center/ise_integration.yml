@@ -1,7 +1,6 @@
 ---
 # ISE AAA Integration Configuration
 # Variables for catalyst_center_ise_aaa_integration role
-
 ise_radius_integration_details:
   - authentication_policy_server:
     - server_type: ISE

@@ -4,7 +4,7 @@
 *.swp
 *.swo
 *~
-
+env.sh
 # Python
 __pycache__/
 *.py[cod]
@@ -75,3 +75,5 @@ roles/
 # Ignore nac_validate
 nac-validate
 nac-validate/
+
+/net-commander

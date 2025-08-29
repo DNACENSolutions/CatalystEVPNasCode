@@ -1,100 +1,1054 @@
 ---
-# IP Pool Management Configuration
-# Variables for catalyst_center_reserve_ip_subpool role
-
-reserve_ip_subpool_details:
-  # Global Management Pool
-  - pool_name: "GLOBAL_MANAGEMENT_POOL"
-    pool_type: "Generic"
-    ip_subnet: "10.1.0.0/16"
-    gateway: "10.1.0.1"
-    dhcp_server:
-      - "10.1.1.10"
-      - "10.1.1.11"
-    dns_server:
-      - "8.8.8.8"
-      - "8.8.4.4"
-    
-  # EVPN Loopback Pools
-  - pool_name: "EVPN_LOOPBACK_POOL"
-    pool_type: "Generic"
-    ip_subnet: "10.255.255.0/24"
-    gateway: "10.255.255.1"
-    description: "Loopback interfaces for EVPN fabric"
-    
-  # EVPN P2P Link Pools
-  - pool_name: "EVPN_P2P_POOL"
-    pool_type: "Generic"
-    ip_subnet: "10.254.0.0/16"
-    gateway: "10.254.0.1"
-    description: "Point-to-point links for EVPN underlay"
-    
-  # San Jose Site Pools
-  - pool_name: "SJ_VLAN10_POOL"
-    pool_type: "Generic"
-    ip_subnet: "10.10.10.0/24"
-    gateway: "10.10.10.1"
-    site_name_hierarchy: "Global/USA/SAN JOSE"
-    vlan_id: 10
-    vlan_name: "VLAN_10_DATA"
-    dhcp_server:
-      - "10.10.1.10"
-    dns_server:
-      - "10.10.1.53"
-      
-  - pool_name: "SJ_VLAN20_POOL"
-    pool_type: "Generic"
-    ip_subnet: "10.10.20.0/24"
-    gateway: "10.10.20.1"
-    site_name_hierarchy: "Global/USA/SAN JOSE"
-    vlan_id: 20
-    vlan_name: "VLAN_20_VOICE"
-    dhcp_server:
-      - "10.10.1.10"
-    dns_server:
-      - "10.10.1.53"
-      
-  - pool_name: "SJ_VLAN30_POOL"
-    pool_type: "Generic"
-    ip_subnet: "10.10.30.0/24"
-    gateway: "10.10.30.1"
-    site_name_hierarchy: "Global/USA/SAN JOSE"
-    vlan_id: 30
-    vlan_name: "VLAN_30_GUEST"
-    dhcp_server:
-      - "10.10.1.11"
-    dns_server:
-      - "8.8.8.8"
-      
-  # San Francisco Site Pools
-  - pool_name: "SF_VLAN10_POOL"
-    pool_type: "Generic"
-    ip_subnet: "10.20.10.0/24"
-    gateway: "10.20.10.1"
-    site_name_hierarchy: "Global/USA/SAN-FRANCISCO"
-    vlan_id: 10
-    vlan_name: "VLAN_10_DATA"
-    dhcp_server:
-      - "10.20.1.10"
-    dns_server:
-      - "10.20.1.53"
-      
-  - pool_name: "SF_VLAN20_POOL"
-    pool_type: "Generic"
-    ip_subnet: "10.20.20.0/24"
-    gateway: "10.20.20.1"
-    site_name_hierarchy: "Global/USA/SAN-FRANCISCO"
-    vlan_id: 20
-    vlan_name: "VLAN_20_VOICE"
-    dhcp_server:
-      - "10.20.1.10"
-    dns_server:
-      - "10.20.1.53"
-
-# IP Pool Configuration Options
-ip_pool_config:
-  auto_generate_vni: true
-  vni_range_start: 10000
-  l3_vni_range_start: 50000
-  enable_duplicate_detection: true
-  wait_for_completion: true
+ipam_details:
+- global_pool_details:
+    settings:
+      ip_pool:
+      - name: underlay
+        gateway: 204.1.1.1
+        ip_address_space: IPv4
+        cidr: 204.1.0.0/16
+        pool_type: Generic
+      - name: underlay1
+        gateway: 204.2.0.1
+        ip_address_space: IPv4
+        cidr: 204.2.0.0/16
+        pool_type: Generic
+        dhcp_server_ips:
+        - 204.192.3.40
+        dns_server_ips:
+        - 171.70.168.183
+      - name: APPOOL
+        gateway: 204.3.0.1
+        ip_address_space: IPv4
+        cidr: 204.3.0.0/20
+        pool_type: Generic
+        dhcp_server_ips:
+        - 204.192.3.40
+        dns_server_ips:
+        - 171.70.168.183
+      - name: EXTPOOL
+        gateway: 204.4.0.1
+        ip_address_space: IPv4
+        cidr: 204.4.0.0/20
+        pool_type: Generic
+        dhcp_server_ips:
+        - 204.192.3.40
+        dns_server_ips:
+        - 171.70.168.183
+      - name: EMPLOYEEPOOL
+        gateway: 192.168.0.1
+        ip_address_space: IPv4
+        cidr: 192.168.0.0/16
+        pool_type: Generic
+        dhcp_server_ips:
+        - 204.192.3.40
+        dns_server_ips:
+        - 171.70.168.183
+      - name: EMPLOYEEPOOLIPV6
+        gateway: 2004:192:168::1
+        ip_address_space: IPv6
+        cidr: 2004:192:168::/64
+        pool_type: Generic
+        dhcp_server_ips:
+        - 2004:192:3::40
+        dns_server_ips:
+        - 2006:1:1::1
+      - name: GUESTPOOL
+        gateway: 192.169.0.1
+        ip_address_space: IPv4
+        cidr: 192.169.0.0/16
+        pool_type: Generic
+        dhcp_server_ips:
+        - 204.192.3.40
+        dns_server_ips:
+        - 171.70.168.183
+      - name: GUESTPOOLIPV6
+        gateway: 2004:192:169::1
+        ip_address_space: IPv6
+        cidr: 2004:192:169::/64
+        pool_type: Generic
+        dhcp_server_ips:
+        - 2004:192:3::40
+        dns_server_ips:
+        - 2006:1:1::1
+      - name: IOTPOOL
+        gateway: 192.170.0.1
+        ip_address_space: IPv4
+        cidr: 192.170.0.0/16
+        pool_type: Generic
+        dhcp_server_ips:
+        - 204.192.3.40
+        dns_server_ips:
+        - 171.70.168.183
+      - name: IOTPOOLIPV6
+        gateway: 2004:192:170::1
+        ip_address_space: IPv6
+        cidr: 2004:192:170::/64
+        pool_type: Generic
+        dhcp_server_ips:
+        - 2004:192:3::40
+        dns_server_ips:
+        - 2006:1:1::1
+      - name: MGMTPOOL
+        gateway: 192.171.0.1
+        ip_address_space: IPv4
+        cidr: 192.171.0.0/16
+        pool_type: Generic
+        dhcp_server_ips:
+        - 204.192.3.40
+        dns_server_ips:
+        - 171.70.168.183
+      - name: MGMTPOOLIPV6
+        gateway: 2004:192:171::1
+        ip_address_space: IPv6
+        cidr: 2004:192:171::/64
+        pool_type: Generic
+        dhcp_server_ips:
+        - 2004:192:3::40
+        dns_server_ips:
+        - 2006:1:1::1
+      - name: VOICEPOOL
+        gateway: 192.172.0.1
+        ip_address_space: IPv4
+        cidr: 192.172.0.0/16
+        pool_type: Generic
+        dhcp_server_ips:
+        - 204.192.3.40
+        dns_server_ips:
+        - 171.70.168.183
+      - name: VOICEPOOLIPV6
+        gateway: 2004:192:172::1
+        ip_address_space: IPv6
+        cidr: 2004:192:172::/64
+        pool_type: Generic
+        dhcp_server_ips:
+        - 2004:192:3::40
+        dns_server_ips:
+        - 2006:1:1::1
+      - name: CRITICALDATAPOOL
+        gateway: 192.173.0.1
+        ip_address_space: IPv4
+        cidr: 192.173.0.0/16
+        pool_type: Generic
+        dhcp_server_ips:
+        - 204.192.3.40
+        dns_server_ips:
+        - 171.70.168.183
+- global_pool_details:
+    settings:
+      ip_pool:
+      - name: CRITICALDATAPOOLIPV6
+        gateway: 2004:192:173::1
+        ip_address_space: IPv6
+        cidr: 2004:192:173::/64
+        pool_type: Generic
+        dhcp_server_ips:
+        - 2004:192:3::40
+        dns_server_ips:
+        - 2006:1:1::1
+      - name: CRITICALVOICEPOOL
+        gateway: 192.174.0.1
+        ip_address_space: IPv4
+        cidr: 192.174.0.0/16
+        pool_type: Generic
+        dhcp_server_ips:
+        - 204.192.3.40
+        dns_server_ips:
+        - 171.70.168.183
+      - name: CRITICALVOICEPOOLIPV6
+        gateway: 2004:192:174::1
+        ip_address_space: IPv6
+        cidr: 2004:192:174::/64
+        pool_type: Generic
+        dhcp_server_ips:
+        - 2004:192:3::40
+        dns_server_ips:
+        - 2006:1:1::1
+      - name: MULTICASTPOOL
+        gateway: 192.175.0.1
+        ip_address_space: IPv4
+        cidr: 192.175.0.0/16
+        pool_type: Generic
+        dhcp_server_ips:
+        - 204.192.3.40
+        dns_server_ips:
+        - 171.70.168.183
+      - name: MULTICASTPOOLIPV6
+        gateway: 2004:192:175::1
+        ip_address_space: IPv6
+        cidr: 2004:192:175::/64
+        pool_type: Generic
+        dhcp_server_ips:
+        - 2004:192:3::40
+        dns_server_ips:
+        - 2006:1:1::1
+- global_pool_details:
+    settings:
+      ip_pool:
+      - name: PRINTPOOL
+        gateway: 192.176.0.1
+        ip_address_space: IPv4
+        cidr: 192.176.0.0/16
+        pool_type: Generic
+        dhcp_server_ips:
+        - 204.192.3.40
+        dns_server_ips:
+        - 171.70.168.183
+      - name: PRINTPOOLIPV6
+        gateway: 2004:192:176::1
+        ip_address_space: IPv6
+        cidr: 2004:192:176::/64
+        pool_type: Generic
+        dhcp_server_ips:
+        - 2004:192:3::40
+        dns_server_ips:
+        - 2006:1:1::1
+      - name: VIDEOCAMPOOL
+        gateway: 192.177.0.1
+        ip_address_space: IPv4
+        cidr: 192.177.0.0/16
+        pool_type: Generic
+        dhcp_server_ips:
+        - 204.192.3.40
+        dns_server_ips:
+        - 171.70.168.183
+      - name: VIDEOCAMPOOLIPV6
+        gateway: 2004:192:177::1
+        ip_address_space: IPv6
+        cidr: 2004:192:177::/64
+        pool_type: Generic
+        dhcp_server_ips:
+        - 2004:192:3::40
+        dns_server_ips:
+        - 2006:1:1::1
+      - name: SERVERSPOOL
+        gateway: 192.178.0.1
+        ip_address_space: IPv4
+        cidr: 192.178.0.0/16
+        pool_type: Generic
+        dhcp_server_ips:
+        - 204.192.3.40
+        dns_server_ips:
+        - 171.70.168.183
+      - name: SERVERSPOOLIPV6
+        gateway: 2004:192:178::1
+        ip_address_space: IPv6
+        cidr: 2004:192:178::/64
+        pool_type: Generic
+        dhcp_server_ips:
+        - 2004:192:3::40
+        dns_server_ips:
+        - 2006:1:1::1
+- global_pool_details:
+    settings:
+      ip_pool:
+      - name: BORDERHandoff
+        gateway: 192.179.0.1
+        ip_address_space: IPv4
+        cidr: 192.179.0.0/16
+        pool_type: Generic
+        dhcp_server_ips:
+        - 204.192.3.40
+        dns_server_ips:
+        - 171.70.168.183
+      - name: BORDERHandoffIPV6
+        gateway: 2004:192:179::1
+        ip_address_space: IPv6
+        cidr: 2004:192:179::/64
+        pool_type: Generic
+        dhcp_server_ips:
+        - 2004:192:3::40
+        dns_server_ips:
+        - 2006:1:1::1
+      - name: GUESTWIFIPOOL
+        gateway: 192.180.0.1
+        ip_address_space: IPv4
+        cidr: 192.180.0.0/16
+        pool_type: Generic
+        dhcp_server_ips:
+        - 204.192.3.40
+        dns_server_ips:
+        - 171.70.168.183
+      - name: GUESTWIFIPOOLIPV6
+        gateway: 2004:192:180::1
+        ip_address_space: IPv6
+        cidr: 2004:192:180::/64
+        pool_type: Generic
+        dhcp_server_ips:
+        - 2004:192:3::40
+        dns_server_ips:
+        - 2006:1:1::1
+      - name: ITStaffPool
+        gateway: 192.181.0.1
+        ip_address_space: IPv4
+        cidr: 192.181.0.0/16
+        pool_type: Generic
+        dhcp_server_ips:
+        - 204.192.3.40
+        dns_server_ips:
+        - 171.70.168.183
+      - name: ITStaffPoolIPV6
+        gateway: 2004:192:181::1
+        ip_address_space: IPv6
+        cidr: 2004:192:181::/64
+        pool_type: Generic
+        dhcp_server_ips:
+        - 2004:192:3::40
+        dns_server_ips:
+        - 2006:1:1::1
+- global_pool_details:
+    settings:
+      ip_pool:
+      - name: Contractors
+        gateway: 192.182.0.1
+        ip_address_space: IPv4
+        cidr: 192.182.0.0/16
+        pool_type: Generic
+        dhcp_server_ips:
+        - 204.192.3.40
+        dns_server_ips:
+        - 171.70.168.183
+      - name: ContractorsIPV6
+        gateway: 2004:192:182::1
+        ip_address_space: IPv6
+        cidr: 2004:192:182::/64
+        pool_type: Generic
+        dhcp_server_ips:
+        - 2004:192:3::40
+        dns_server_ips:
+        - 2006:1:1::1
+      - name: BYOD
+        gateway: 192.183.0.1
+        ip_address_space: IPv4
+        cidr: 192.183.0.0/16
+        pool_type: Generic
+        dhcp_server_ips:
+        - 204.192.3.40
+        dns_server_ips:
+        - 171.70.168.183
+      - name: BYODIPV6
+        gateway: 2004:192:183::1
+        ip_address_space: IPv6
+        cidr: 2004:192:183::/64
+        pool_type: Generic
+        dhcp_server_ips:
+        - 2004:192:3::40
+        dns_server_ips:
+        - 2006:1:1::1
+      - name: Auditors
+        gateway: 192.184.0.1
+        ip_address_space: IPv4
+        cidr: 192.184.0.0/16
+        pool_type: Generic
+        dhcp_server_ips:
+        - 204.192.3.40
+        dns_server_ips:
+        - 171.70.168.183
+      - name: AuditorsIPV6
+        gateway: 2004:192:184::1
+        ip_address_space: IPv6
+        cidr: 2004:192:184::/64
+        pool_type: Generic
+        dhcp_server_ips:
+        - 2004:192:3::40
+        dns_server_ips:
+        - 2006:1:1::1
+      - name: GuestAnchor
+        gateway: 192.185.0.1
+        ip_address_space: IPv4
+        cidr: 192.185.0.0/16
+        pool_type: Generic
+        dhcp_server_ips:
+        - 204.192.3.40
+        dns_server_ips:
+        - 171.70.168.183
+      - name: GuestAnchorIPV6
+        gateway: 2004:192:185::1
+        ip_address_space: IPv6
+        cidr: 2004:192:185::/64
+        pool_type: Generic
+        dhcp_server_ips:
+        - 2004:192:3::40
+        dns_server_ips:
+        - 2006:1:1::1
+- reserve_pool_details:
+  - ipv6_address_space: false
+    ipv4_global_pool: 204.1.0.0/16
+    ipv4_prefix: true
+    ipv4_prefix_length: 24
+    ipv4_subnet: 204.1.1.0
+    ipv4_gateway: 204.1.1.1
+    name: underlay_linkpool_sjc
+    site_name: Global/USA/SAN JOSE
+    slaac_support: false
+    pool_type: LAN
+  - ipv6_address_space: false
+    ipv4_global_pool: 204.1.0.0/16
+    ipv4_prefix: true
+    ipv4_prefix_length: 24
+    ipv4_subnet: 204.1.2.0
+    ipv4_gateway: 204.1.2.1
+    name: underlay_lbpool_sjc
+    site_name: Global/USA/SAN JOSE
+    slaac_support: false
+    pool_type: LAN
+  - ipv6_address_space: false
+    ipv4_global_pool: 204.1.0.0/16
+    ipv4_prefix: true
+    ipv4_prefix_length: 24
+    ipv4_subnet: 204.1.3.0
+    ipv4_gateway: 204.1.3.1
+    name: underlay_linkpool_sf
+    site_name: Global/USA/SAN-FRANCISCO
+    slaac_support: false
+    pool_type: LAN
+  - ipv6_address_space: false
+    ipv4_global_pool: 204.1.0.0/16
+    ipv4_prefix: true
+    ipv4_prefix_length: 24
+    ipv4_subnet: 204.1.4.0
+    ipv4_gateway: 204.1.4.1
+    name: underlay_lbpool_sf
+    site_name: Global/USA/SAN-FRANCISCO
+    slaac_support: false
+    pool_type: LAN
+  - ipv6_address_space: false
+    ipv4_global_pool: 204.3.0.0/20
+    ipv4_prefix: true
+    ipv4_prefix_length: 24
+    ipv4_subnet: 204.3.0.0
+    ipv4_gateway: 204.3.0.1
+    name: APPOOL_SJC
+    site_name: Global/USA/SAN JOSE
+    slaac_support: false
+    pool_type: Generic
+    ipv4_dhcp_servers:
+    - 204.192.3.40
+    ipv4_dns_servers:
+    - 204.192.3.40
+  - ipv6_address_space: false
+    ipv4_global_pool: 204.4.0.0/20
+    ipv4_prefix: true
+    ipv4_prefix_length: 24
+    ipv4_subnet: 204.4.0.0
+    ipv4_gateway: 204.4.0.1
+    name: EXTPOOL_SJC
+    site_name: Global/USA/SAN JOSE
+    slaac_support: false
+    pool_type: Generic
+    ipv4_dhcp_servers:
+    - 204.192.3.40
+    ipv4_dns_servers:
+    - 204.192.3.40
+  - ipv6_address_space: false
+    ipv4_global_pool: 204.3.0.0/20
+    ipv4_prefix: true
+    ipv4_prefix_length: 24
+    ipv4_subnet: 204.3.1.0
+    ipv4_gateway: 204.3.1.1
+    name: APPOOL_SF
+    site_name: Global/USA/SAN-FRANCISCO
+    slaac_support: false
+    pool_type: Generic
+    ipv4_dhcp_servers:
+    - 204.192.3.40
+    ipv4_dns_servers:
+    - 204.192.3.40
+  - ipv6_address_space: false
+    ipv4_global_pool: 204.4.0.0/20
+    ipv4_prefix: true
+    ipv4_prefix_length: 24
+    ipv4_subnet: 204.4.1.0
+    ipv4_gateway: 204.4.1.1
+    name: EXTPOOL_SF
+    site_name: Global/USA/SAN-FRANCISCO
+    slaac_support: false
+    pool_type: Generic
+    ipv4_dhcp_servers:
+    - 204.192.3.40
+    ipv4_dns_servers:
+    - 204.192.3.40
+  - ipv6_address_space: true
+    ipv4_global_pool: 192.168.0.0/16
+    ipv4_prefix: true
+    ipv4_prefix_length: 24
+    ipv4_subnet: 192.168.0.0
+    ipv4_gateway: 192.168.0.1
+    ipv6_global_pool: 2004:192:168::/64
+    ipv6_prefix: true
+    ipv6_prefix_length: 112
+    ipv6_subnet: 2004:192:168::1:0
+    ipv6_gateway: 2004:192:168::1:1
+    name: EMPLOYEEPOOL_sjc
+    site_name: Global/USA/SAN JOSE
+    slaac_support: false
+    pool_type: Generic
+    ipv4_dhcp_servers:
+    - 204.192.3.40
+    ipv4_dns_servers:
+    - 204.192.3.40
+    ipv6_dhcp_servers:
+    - 2004:192:3::40
+    ipv6_dns_servers:
+    - 2006:1:1::1
+  - ipv6_address_space: true
+    ipv4_global_pool: 192.168.0.0/16
+    ipv4_prefix: true
+    ipv4_prefix_length: 24
+    ipv4_subnet: 192.168.1.0
+    ipv4_gateway: 192.168.1.1
+    ipv6_global_pool: 2004:192:168::/64
+    ipv6_prefix: true
+    ipv6_prefix_length: 112
+    ipv6_subnet: 2004:192:168::2:0
+    ipv6_gateway: 2004:192:168::2:1
+    name: EMPLOYEEPOOL_sf
+    site_name: Global/USA/SAN-FRANCISCO
+    slaac_support: false
+    pool_type: Generic
+    ipv4_dhcp_servers:
+    - 204.192.3.40
+    ipv4_dns_servers:
+    - 204.192.3.40
+    ipv6_dhcp_servers:
+    - 2004:192:3::40
+    ipv6_dns_servers:
+    - 2006:1:1::1
+  - name: GUESTPOOL_sjc
+    ipv6_address_space: true
+    ipv4_global_pool: 192.169.0.0/16
+    ipv4_prefix: true
+    ipv4_prefix_length: 24
+    ipv4_subnet: 192.169.0.0
+    ipv4_gateway: 192.169.0.1
+    ipv6_global_pool: 2004:192:169::/64
+    ipv6_prefix: true
+    ipv6_prefix_length: 112
+    ipv6_subnet: 2004:192:169::0
+    ipv6_gateway: 2004:192:169::1
+    site_name: Global/USA/SAN JOSE
+    slaac_support: false
+    pool_type: Generic
+    ipv4_dhcp_servers:
+    - 204.192.3.40
+    ipv4_dns_servers:
+    - 204.192.3.40
+    ipv6_dhcp_servers:
+    - 2004:192:3::40
+    ipv6_dns_servers:
+    - 2006:1:1::1
+  - name: GUESTPOOL_sf
+    ipv6_address_space: true
+    ipv4_global_pool: 192.169.0.0/16
+    ipv4_prefix: true
+    ipv4_prefix_length: 24
+    ipv4_subnet: 192.169.1.0
+    ipv4_gateway: 192.169.1.1
+    ipv6_global_pool: 2004:192:169::/64
+    ipv6_prefix: true
+    ipv6_prefix_length: 112
+    ipv6_subnet: 2004:192:169::1:0
+    ipv6_gateway: 2004:192:169::1:1
+    site_name: Global/USA/SAN-FRANCISCO
+    slaac_support: false
+    ipv4_dhcp_servers:
+    - 204.192.3.40
+    ipv4_dns_servers:
+    - 204.192.3.40
+    ipv6_dhcp_servers:
+    - 2004:192:3::40
+    ipv6_dns_servers:
+    - 2006:1:1::1
+  - name: IOTPOOL_sjc
+    ipv6_address_space: true
+    ipv4_global_pool: 192.170.0.0/16
+    ipv4_prefix: true
+    ipv4_prefix_length: 24
+    ipv4_subnet: 192.170.0.0
+    ipv4_gateway: 192.170.0.1
+    ipv6_global_pool: 2004:192:170::/64
+    ipv6_prefix: true
+    ipv6_prefix_length: 112
+    ipv6_subnet: 2004:192:170::0
+    ipv6_gateway: 2004:192:170::1
+    site_name: Global/USA/SAN JOSE
+    slaac_support: false
+    pool_type: Generic
+    ipv4_dhcp_servers:
+    - 204.192.3.40
+    ipv4_dns_servers:
+    - 204.192.3.40
+    ipv6_dhcp_servers:
+    - 2004:192:3::40
+    ipv6_dns_servers:
+    - 2006:1:1::1
+  - name: IOTPOOL_sf
+    ipv6_address_space: true
+    ipv4_global_pool: 192.170.0.0/16
+    ipv4_prefix: true
+    ipv4_prefix_length: 24
+    ipv4_subnet: 192.170.1.0
+    ipv4_gateway: 192.170.1.1
+    ipv6_global_pool: 2004:192:170::/64
+    ipv6_prefix: true
+    ipv6_prefix_length: 112
+    ipv6_subnet: 2004:192:170::1:0
+    ipv6_gateway: 2004:192:170::1:1
+    site_name: Global/USA/SAN-FRANCISCO
+    slaac_support: false
+    pool_type: Generic
+    ipv4_dhcp_servers:
+    - 204.192.3.40
+    ipv4_dns_servers:
+    - 204.192.3.40
+    ipv6_dhcp_servers:
+    - 2004:192:3::40
+    ipv6_dns_servers:
+    - 2006:1:1::1
+  - name: MGMTPOOL_sjc
+    ipv6_address_space: true
+    ipv4_global_pool: 192.171.0.0/16
+    ipv4_prefix: true
+    ipv4_prefix_length: 24
+    ipv4_subnet: 192.171.0.0
+    ipv4_gateway: 192.171.0.1
+    ipv6_global_pool: 2004:192:171::/64
+    ipv6_prefix: true
+    ipv6_prefix_length: 112
+    ipv6_subnet: 2004:192:171::0
+    ipv6_gateway: 2004:192:171::1
+    site_name: Global/USA/SAN JOSE
+    slaac_support: false
+    pool_type: Generic
+    ipv4_dhcp_servers:
+    - 204.192.3.40
+    ipv4_dns_servers:
+    - 204.192.3.40
+    ipv6_dhcp_servers:
+    - 2004:192:3::40
+    ipv6_dns_servers:
+    - 2006:1:1::1
+  - name: MGMTPOOL_sf
+    ipv6_address_space: true
+    ipv4_global_pool: 192.171.0.0/16
+    ipv4_prefix: true
+    ipv4_prefix_length: 24
+    ipv4_subnet: 192.171.1.0
+    ipv4_gateway: 192.171.1.1
+    ipv6_global_pool: 2004:192:171::/64
+    ipv6_prefix: true
+    ipv6_prefix_length: 112
+    ipv6_subnet: 2004:192:171::1:0
+    ipv6_gateway: 2004:192:171::1:1
+    site_name: Global/USA/SAN-FRANCISCO
+    slaac_support: false
+    pool_type: Generic
+    ipv4_dhcp_servers:
+    - 204.192.3.40
+    ipv4_dns_servers:
+    - 204.192.3.40
+    ipv6_dhcp_servers:
+    - 2004:192:3::40
+    ipv6_dns_servers:
+    - 2006:1:1::1
+  - name: VOICEPOOL_sjc
+    ipv6_address_space: true
+    ipv4_global_pool: 192.172.0.0/16
+    ipv4_prefix: true
+    ipv4_prefix_length: 24
+    ipv4_subnet: 192.172.0.0
+    ipv4_gateway: 192.172.0.1
+    ipv6_global_pool: 2004:192:172::/64
+    ipv6_prefix: true
+    ipv6_prefix_length: 112
+    ipv6_subnet: 2004:192:172::0
+    ipv6_gateway: 2004:192:172::1
+    site_name: Global/USA/SAN JOSE
+    slaac_support: false
+    pool_type: Generic
+    ipv4_dhcp_servers:
+    - 204.192.3.40
+    ipv4_dns_servers:
+    - 204.192.3.40
+    ipv6_dhcp_servers:
+    - 2004:192:3::40
+    ipv6_dns_servers:
+    - 2006:1:1::1
+  - name: VOICEPOOL_sf
+    ipv6_address_space: true
+    ipv4_global_pool: 192.172.0.0/16
+    ipv4_prefix: true
+    ipv4_prefix_length: 24
+    ipv4_subnet: 192.172.1.0
+    ipv4_gateway: 192.172.1.1
+    ipv6_global_pool: 2004:192:172::/64
+    ipv6_prefix: true
+    ipv6_prefix_length: 112
+    ipv6_subnet: 2004:192:172::1:0
+    ipv6_gateway: 2004:192:172::1:1
+    site_name: Global/USA/SAN-FRANCISCO
+    slaac_support: false
+    pool_type: Generic
+    ipv4_dhcp_servers:
+    - 204.192.3.40
+    ipv4_dns_servers:
+    - 204.192.3.40
+    ipv6_dhcp_servers:
+    - 2004:192:3::40
+    ipv6_dns_servers:
+    - 2006:1:1::1
+  - name: CRITICALDATAPOOL_sjc
+    ipv6_address_space: true
+    ipv4_global_pool: 192.173.0.0/16
+    ipv4_prefix: true
+    ipv4_prefix_length: 24
+    ipv4_subnet: 192.173.0.0
+    ipv4_gateway: 192.173.0.1
+    ipv6_global_pool: 2004:192:173::/64
+    ipv6_prefix: true
+    ipv6_prefix_length: 112
+    ipv6_subnet: 2004:192:173::0
+    ipv6_gateway: 2004:192:173::1
+    site_name: Global/USA/SAN JOSE
+    slaac_support: false
+    pool_type: Generic
+    ipv4_dhcp_servers:
+    - 204.192.3.40
+    ipv4_dns_servers:
+    - 204.192.3.40
+    ipv6_dhcp_servers:
+    - 2004:192:3::40
+    ipv6_dns_servers:
+    - 2006:1:1::1
+  - name: CRITICALDATAPOOL_sf
+    ipv6_address_space: true
+    ipv4_global_pool: 192.173.0.0/16
+    ipv4_prefix: true
+    ipv4_prefix_length: 24
+    ipv4_subnet: 192.173.1.0
+    ipv4_gateway: 192.173.1.1
+    ipv6_global_pool: 2004:192:173::/64
+    ipv6_prefix: true
+    ipv6_prefix_length: 112
+    ipv6_subnet: 2004:192:173::1:0
+    ipv6_gateway: 2004:192:173::1:1
+    site_name: Global/USA/SAN-FRANCISCO
+    slaac_support: false
+    pool_type: Generic
+    ipv4_dhcp_servers:
+    - 204.192.3.40
+    ipv4_dns_servers:
+    - 204.192.3.40
+    ipv6_dhcp_servers:
+    - 2004:192:3::40
+    ipv6_dns_servers:
+    - 2006:1:1::1
+  - name: CRITICALVOICEPOOL_sjc
+    ipv6_address_space: true
+    ipv4_global_pool: 192.174.0.0/16
+    ipv4_prefix: true
+    ipv4_prefix_length: 24
+    ipv4_subnet: 192.174.0.0
+    ipv4_gateway: 192.174.0.1
+    ipv6_global_pool: 2004:192:174::/64
+    ipv6_prefix: true
+    ipv6_prefix_length: 112
+    ipv6_subnet: 2004:192:174::0
+    ipv6_gateway: 2004:192:174::1
+    site_name: Global/USA/SAN JOSE
+    slaac_support: false
+    pool_type: Generic
+    ipv4_dhcp_servers:
+    - 204.192.3.40
+    ipv4_dns_servers:
+    - 204.192.3.40
+    ipv6_dhcp_servers:
+    - 2004:192:3::40
+    ipv6_dns_servers:
+    - 2006:1:1::1
+  - name: CRITICALVOICEPOOL_sf
+    ipv6_address_space: true
+    ipv4_global_pool: 192.174.0.0/16
+    ipv4_prefix: true
+    ipv4_prefix_length: 24
+    ipv4_subnet: 192.174.1.0
+    ipv4_gateway: 192.174.1.1
+    ipv6_global_pool: 2004:192:174::/64
+    ipv6_prefix: true
+    ipv6_prefix_length: 112
+    ipv6_subnet: 2004:192:174::1:0
+    ipv6_gateway: 2004:192:174::1:1
+    site_name: Global/USA/SAN-FRANCISCO
+    slaac_support: false
+    pool_type: Generic
+    ipv4_dhcp_servers:
+    - 204.192.3.40
+    ipv4_dns_servers:
+    - 204.192.3.40
+    ipv6_dhcp_servers:
+    - 2004:192:3::40
+    ipv6_dns_servers:
+    - 2006:1:1::1
+  - name: MULTICASTPOOL_sjc
+    ipv6_address_space: true
+    ipv4_global_pool: 192.175.0.0/16
+    ipv4_prefix: true
+    ipv4_prefix_length: 24
+    ipv4_subnet: 192.175.0.0
+    ipv4_gateway: 192.175.0.1
+    ipv6_global_pool: 2004:192:175::/64
+    ipv6_prefix: true
+    ipv6_prefix_length: 112
+    ipv6_subnet: 2004:192:175::0
+    ipv6_gateway: 2004:192:175::1
+    site_name: Global/USA/SAN JOSE
+    slaac_support: false
+    pool_type: Generic
+  - name: MULTICASTPOOL_sf
+    ipv6_address_space: true
+    ipv4_global_pool: 192.175.0.0/16
+    ipv4_prefix: true
+    ipv4_prefix_length: 24
+    ipv4_subnet: 192.175.1.0
+    ipv4_gateway: 192.175.1.1
+    ipv6_global_pool: 2004:192:175::/64
+    ipv6_prefix: true
+    ipv6_prefix_length: 112
+    ipv6_subnet: 2004:192:175::1:0
+    ipv6_gateway: 2004:192:175::1:1
+    site_name: Global/USA/SAN-FRANCISCO
+    slaac_support: false
+    pool_type: Generic
+  - name: MULTICASTPOOL1_sjc
+    ipv6_address_space: true
+    ipv4_global_pool: 192.175.0.0/16
+    ipv4_prefix: true
+    ipv4_prefix_length: 24
+    ipv4_subnet: 192.175.2.0
+    ipv4_gateway: 192.175.2.1
+    ipv6_global_pool: 2004:192:175::/64
+    ipv6_prefix: true
+    ipv6_prefix_length: 112
+    ipv6_subnet: 2004:192:175::2:0
+    ipv6_gateway: 2004:192:175::2:1
+    site_name: Global/USA/SAN JOSE
+    slaac_support: false
+    pool_type: Generic
+  - name: MULTICASTPOOL1_sf
+    ipv6_address_space: true
+    ipv4_global_pool: 192.175.0.0/16
+    ipv4_prefix: true
+    ipv4_prefix_length: 24
+    ipv4_subnet: 192.175.3.0
+    ipv4_gateway: 192.175.3.1
+    ipv6_global_pool: 2004:192:175::/64
+    ipv6_prefix: true
+    ipv6_prefix_length: 112
+    ipv6_subnet: 2004:192:175::3:0
+    ipv6_gateway: 2004:192:175::3:1
+    site_name: Global/USA/SAN-FRANCISCO
+    slaac_support: false
+    pool_type: Generic
+  - name: MULTICASTPOOL2_sjc
+    ipv6_address_space: true
+    ipv4_global_pool: 192.175.0.0/16
+    ipv4_prefix: true
+    ipv4_prefix_length: 24
+    ipv4_subnet: 192.175.4.0
+    ipv4_gateway: 192.175.4.1
+    ipv6_global_pool: 2004:192:175::/64
+    ipv6_prefix: true
+    ipv6_prefix_length: 112
+    ipv6_subnet: 2004:192:175::4:0
+    ipv6_gateway: 2004:192:175::4:1
+    site_name: Global/USA/SAN JOSE
+    slaac_support: false
+    pool_type: Generic
+  - name: MULTICASTPOOL2_sf
+    ipv6_address_space: true
+    ipv4_global_pool: 192.175.0.0/16
+    ipv4_prefix: true
+    ipv4_prefix_length: 24
+    ipv4_subnet: 192.175.5.0
+    ipv4_gateway: 192.175.5.1
+    ipv6_global_pool: 2004:192:175::/64
+    ipv6_prefix: true
+    ipv6_prefix_length: 112
+    ipv6_subnet: 2004:192:175::5:0
+    ipv6_gateway: 2004:192:175::5:1
+    site_name: Global/USA/SAN-FRANCISCO
+    slaac_support: false
+    pool_type: Generic
+  - name: BORDERHandoff_sjc
+    ipv6_address_space: true
+    ipv4_global_pool: 192.179.0.0/16
+    ipv4_prefix: true
+    ipv4_prefix_length: 24
+    ipv4_subnet: 192.179.0.0
+    ipv4_gateway: 192.179.0.1
+    ipv6_global_pool: 2004:192:179::/64
+    ipv6_prefix: true
+    ipv6_prefix_length: 112
+    ipv6_subnet: 2004:192:179::0
+    ipv6_gateway: 2004:192:179::1
+    site_name: Global/USA/SAN JOSE
+    slaac_support: false
+    pool_type: Generic
+  - name: SERVERSPOOL_sjc
+    ipv6_address_space: false
+    ipv4_global_pool: 192.178.0.0/16
+    ipv4_prefix: true
+    ipv4_prefix_length: 24
+    ipv4_subnet: 192.178.0.0
+    ipv4_gateway: 192.178.0.1
+    site_name: Global/USA/SAN JOSE
+    slaac_support: false
+    pool_type: Generic
+  - name: SERVERSPOOL_sf
+    ipv6_address_space: false
+    ipv4_global_pool: 192.178.0.0/16
+    ipv4_prefix: true
+    ipv4_prefix_length: 24
+    ipv4_subnet: 192.178.1.0
+    ipv4_gateway: 192.178.1.1
+    site_name: Global/USA/SAN-FRANCISCO
+    slaac_support: false
+    pool_type: Generic
+  - name: CONTRACTORS_sjc
+    ipv6_address_space: true
+    ipv4_global_pool: 192.182.0.0/16
+    ipv4_prefix: true
+    ipv4_prefix_length: 24
+    ipv4_subnet: 192.182.0.0
+    ipv4_gateway: 192.182.0.1
+    ipv6_global_pool: 2004:192:182::/64
+    ipv6_prefix: true
+    ipv6_prefix_length: 112
+    ipv6_subnet: 2004:192:182::0
+    ipv6_gateway: 2004:192:182::1
+    site_name: Global/USA/SAN JOSE
+    slaac_support: false
+    pool_type: Generic
+    ipv4_dhcp_servers:
+    - 204.192.3.40
+    ipv4_dns_servers:
+    - 204.192.3.40
+    ipv6_dhcp_servers:
+    - 2004:192:3::40
+    ipv6_dns_servers:
+    - 2006:1:1::1
+  - name: CONTRACTORS_sf
+    ipv6_address_space: true
+    ipv4_global_pool: 192.182.0.0/16
+    ipv4_prefix: true
+    ipv4_prefix_length: 24
+    ipv4_subnet: 192.182.1.0
+    ipv4_gateway: 192.182.1.1
+    ipv6_global_pool: 2004:192:182::/64
+    ipv6_prefix: true
+    ipv6_prefix_length: 112
+    ipv6_subnet: 2004:192:182::1:0
+    ipv6_gateway: 2004:192:182::1:1
+    site_name: Global/USA/SAN-FRANCISCO
+    slaac_support: false
+    pool_type: Generic
+    ipv4_dhcp_servers:
+    - 204.192.3.40
+    ipv4_dns_servers:
+    - 204.192.3.40
+    ipv6_dhcp_servers:
+    - 2004:192:3::40
+    ipv6_dns_servers:
+    - 2006:1:1::1
+  - name: PRINTPOOL_sjc
+    ipv6_address_space: true
+    ipv4_global_pool: 192.176.0.0/16
+    ipv4_prefix: true
+    ipv4_prefix_length: 24
+    ipv4_subnet: 192.176.0.0
+    ipv4_gateway: 192.176.0.1
+    ipv6_global_pool: 2004:192:176::/64
+    ipv6_prefix: true
+    ipv6_prefix_length: 112
+    ipv6_subnet: 2004:192:176::0
+    ipv6_gateway: 2004:192:176::1
+    site_name: Global/USA/SAN JOSE
+    slaac_support: false
+    pool_type: Generic
+    ipv4_dhcp_servers:
+    - 204.192.3.40
+    ipv4_dns_servers:
+    - 204.192.3.40
+    ipv6_dhcp_servers:
+    - 2004:192:3::40
+    ipv6_dns_servers:
+    - 2006:1:1::1
+  - name: PRINTPOOL_sf
+    ipv6_address_space: true
+    ipv4_global_pool: 192.176.0.0/16
+    ipv4_prefix: true
+    ipv4_prefix_length: 24
+    ipv4_subnet: 192.176.1.0
+    ipv4_gateway: 192.176.1.1
+    ipv6_global_pool: 2004:192:176::/64
+    ipv6_prefix: true
+    ipv6_prefix_length: 112
+    ipv6_subnet: 2004:192:176::1:0
+    ipv6_gateway: 2004:192:176::1:1
+    site_name: Global/USA/SAN-FRANCISCO
+    slaac_support: false
+    pool_type: Generic
+    ipv4_dhcp_servers:
+    - 204.192.3.40
+    ipv4_dns_servers:
+    - 204.192.3.40
+    ipv6_dhcp_servers:
+    - 2004:192:3::40
+    ipv6_dns_servers:
+    - 2006:1:1::1
+  - name: GUESTWIFIPOOL_sjc
+    ipv6_address_space: true
+    ipv4_global_pool: 192.180.0.0/16
+    ipv4_prefix: true
+    ipv4_prefix_length: 24
+    ipv4_subnet: 192.180.0.0
+    ipv4_gateway: 192.180.0.1
+    ipv6_global_pool: 2004:192:180::/64
+    ipv6_prefix: true
+    ipv6_prefix_length: 112
+    ipv6_subnet: 2004:192:180::0
+    ipv6_gateway: 2004:192:180::1
+    site_name: Global/USA/SAN JOSE
+    slaac_support: false
+    pool_type: Generic
+    ipv4_dhcp_servers:
+    - 204.192.3.40
+    ipv4_dns_servers:
+    - 204.192.3.40
+    ipv6_dhcp_servers:
+    - 2004:192:3::40
+    ipv6_dns_servers:
+    - 2006:1:1::1
+  - name: GUESTWIFIPOOL_sf
+    ipv6_address_space: true
+    ipv4_global_pool: 192.180.0.0/16
+    ipv4_prefix: true
+    ipv4_prefix_length: 24
+    ipv4_subnet: 192.180.1.0
+    ipv4_gateway: 192.180.1.1
+    ipv6_global_pool: 2004:192:180::/64
+    ipv6_prefix: true
+    ipv6_prefix_length: 112
+    ipv6_subnet: 2004:192:180::1:0
+    ipv6_gateway: 2004:192:180::1:1
+    site_name: Global/USA/SAN-FRANCISCO
+    slaac_support: false
+    pool_type: Generic
+    ipv4_dhcp_servers:
+    - 204.192.3.40
+    ipv4_dns_servers:
+    - 204.192.3.40
+    ipv6_dhcp_servers:
+    - 2004:192:3::40
+    ipv6_dns_servers:
+    - 2006:1:1::1

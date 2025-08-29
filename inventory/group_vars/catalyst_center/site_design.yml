@@ -1,7 +1,6 @@
 ---
 # Site Design Configuration
 # Variables for catalyst_center_site_design role
-
 design_sites:
   # Area Sites
   - site:

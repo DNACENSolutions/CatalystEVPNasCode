@@ -694,7 +694,7 @@ ansible-playbook -i inventory/hosts.yml playbooks/06_validation.yml \
 
 **Device Discovery Issues:**
 - Validate device IP addresses
-- Check SSH/SNMP credentials
+- Check device credentials
 - Verify network reachability
 
 **Configuration Deployment Failures:**
@@ -702,34 +702,23 @@ ansible-playbook -i inventory/hosts.yml playbooks/06_validation.yml \
 - Check for configuration conflicts
 - Validate device capabilities
 
-### Validation Commands
-After deployment, verify the fabric status:
-
-**BGP Status:**
+### Debug Commands
 ```bash
-# On spine devices
-show bgp l2vpn evpn summary
-show bgp l2vpn evpn
+# Enable verbose logging
+export ANSIBLE_DEBUG=1
 
-# On leaf devices
-show bgp l2vpn evpn summary
-show nve peers
+# Run with maximum verbosity
+ansible-playbook playbooks/evpn_deployment.yml -vvvv
+
+# Check specific task output
+ansible-playbook playbooks/evpn_deployment.yml --tags "sites" --step
 ```
 
-**VXLAN Status:**
-```bash
-# On leaf devices
-show nve vni
-show vxlan
-show interface nve1
-```
+### Log Files
 
-**Fabric Health:**
-```bash
-# Via Catalyst Center
-show fabric summary
-show fabric site health
-```
+- **Ansible Logs**: `/var/log/ansible.log`
+- **Deployment Logs**: `./logs/deployment.log`
+- **Validation Logs**: Output from validation scripts
 
 ## Rollback Procedures
 
@@ -799,3 +788,5 @@ ansible-playbook -i inventory/hosts.yml roles/validation/tasks/rollback.yml \
 - Check Cisco documentation for specific features
 - Consult Ansible documentation for automation issues
 - Engage with community forums for best practices
+
+```
