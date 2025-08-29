@@ -43,7 +43,7 @@ Automated BGP EVPN fabric deployment using Catalyst Center (DNAC) and Ansible wo
 3. **Install Ansible collections and roles:**
    ```bash
    ansible-galaxy collection install cisco.dnac
-   git clone git@github.com:DNACENSolutions/catalyst_center_ansible_roles.git
+   ansible-galaxy role install -r role_requirements.yml
    ```
 
 4. **Set up environment variables:**
@@ -152,67 +152,61 @@ Deploy the entire EVPN fabric:
 ansible-playbook playbooks/evpn_deployment.yml
 ```
 
-### Phase-by-Phase Deployment
-
-Deploy specific phases using the deployment script:
-
-```bash
-# Phase 1: ISE Integration
-./deploy.sh phase1
-
-# Phase 2: Site Hierarchy Design
-./deploy.sh phase2
-
-# Phase 3: Global Credentials
-./deploy.sh phase3
-
-# Phase 4: Network Settings
-./deploy.sh phase4
-
-# Phase 5: IP Pool Management
-./deploy.sh phase5
-
-# Phase 6: Device Discovery
-./deploy.sh phase6
-
-# Phase 9: Device Provisioning
-./deploy.sh phase9
-
-# Phase 10: Template Creation
-./deploy.sh phase10
-```
-
-### Using Ansible Tags
+### Tag-Based Deployment
 
 Deploy specific components using tags:
 
 ```bash
 # ISE Integration
-ansible-playbook playbooks/evpn_deployment.yml --tags "ise"
+./deploy.sh ise
+# Or: ansible-playbook playbooks/evpn_deployment.yml --tags "ise"
 
-# Site Design
-ansible-playbook playbooks/evpn_deployment.yml --tags "sites"
+# Site Hierarchy Design
+./deploy.sh sites
+# Or: ansible-playbook playbooks/evpn_deployment.yml --tags "sites"
 
-# Credentials
-ansible-playbook playbooks/evpn_deployment.yml --tags "credentials"
+# Global Credentials
+./deploy.sh credentials
+# Or: ansible-playbook playbooks/evpn_deployment.yml --tags "credentials"
 
 # Network Settings
-ansible-playbook playbooks/evpn_deployment.yml --tags "network"
+./deploy.sh network
+# Or: ansible-playbook playbooks/evpn_deployment.yml --tags "network"
 
-# IP Pools
-ansible-playbook playbooks/evpn_deployment.yml --tags "ippools"
+# IP Pool Management
+./deploy.sh ippools
+# Or: ansible-playbook playbooks/evpn_deployment.yml --tags "ippools"
 
 # Device Discovery
-ansible-playbook playbooks/evpn_deployment.yml --tags "discovery"
+./deploy.sh discovery
+# Or: ansible-playbook playbooks/evpn_deployment.yml --tags "discovery"
 
 # Device Provisioning
-ansible-playbook playbooks/evpn_deployment.yml --tags "provision"
+./deploy.sh provision
+# Or: ansible-playbook playbooks/evpn_deployment.yml --tags "provision"
 
 # Template Creation
-ansible-playbook playbooks/evpn_deployment.yml --tags "templates"
+./deploy.sh templates
+# Or: ansible-playbook playbooks/evpn_deployment.yml --tags "templates"
 
 # All validation steps
 ansible-playbook playbooks/evpn_deployment.yml --tags "validate"
+```
+
+### Advanced Deployment Options
+
+```bash
+# Deploy multiple components
+ansible-playbook playbooks/evpn_deployment.yml --tags "ise,sites,credentials"
+
+# Deploy with validation
+ansible-playbook playbooks/evpn_deployment.yml --tags "sites,validate"
+
+# Deploy everything except templates
+ansible-playbook playbooks/evpn_deployment.yml --skip-tags "templates"
+
+# Verbose deployment for troubleshooting
+ansible-playbook playbooks/evpn_deployment.yml --tags "discovery" -vvvv
 ```
 
 ## 📁 Project Structure
@@ -243,18 +237,22 @@ CatalystEVPNasCode/
 │       ├── site_design.json         # Site design validation
 │       ├── credentials.json         # Credentials validation
 │       └── ise_integration.json     # ISE validation
-├── templates/
-│   └── overlay/                     # Jinja2 configuration templates
-│       ├── border_evpn_config.j2
-│       ├── spine_evpn_config.j2
-│       ├── leaf_evpn_config.j2
-│       └── dot1x_config.j2
 ├── roles/                           # Catalyst Center Ansible roles
+│   ├── catalyst_center_ise_aaa_integration/
+│   ├── catalyst_center_site_design/
+│   ├── catalyst_center_device_credentials/
+│   ├── catalyst_center_network_settings/
+│   ├── catalyst_center_ipam/
+│   ├── catalyst_center_device_discovery/
+│   ├── catalyst_center_device_provision/
+│   └── catalyst_center_device_templates/
 ├── validate_bgp_evpn_deployment.py  # BGP EVPN validation script
 ├── validate_group_vars.py           # Group variables validation
 ├── deploy.sh                        # Deployment script
-├── Makefile                         # Make targets for validation
-└── BGP_EVPN_VALIDATION_GUIDE.md     # Validation documentation
+├── role_requirements.yml            # Ansible roles requirements
+├── README.md                        # Project documentation
+├── LICENSE                          # Project license
+└── DEPLOYMENT_GUIDE.md              # Deployment guide
 ```
 
 ## 🔧 Templates
