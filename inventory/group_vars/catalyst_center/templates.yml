@@ -3,215 +3,248 @@
 # Variables for template creation and deployment roles
 
 # Configuration Template Details
-configuration_template_details:
+template_details:
+- configuration_templates:
   # EVPN Border/Edge Template
-  - template_name: "EVPN_Border_Template"
-    template_description: "BGP EVPN Border/Edge device configuration"
-    device_types:
-      - product_family: "Switches and Hubs"
-        product_series: "Cisco Catalyst 9000 Series Switches"
-        product_type: "Cisco Catalyst 9300 Series Switches"
-    software_type: "IOS-XE"
-    template_content: |
-      ! BGP EVPN Border Configuration
-      router bgp {{ bgp_as_number }}
-       bgp router-id {{ loopback_ip }}
-       bgp log-neighbor-changes
-       address-family l2vpn evpn
-        neighbor {{ spine_loopback }} activate
-        neighbor {{ spine_loopback }} send-community both
-       exit-address-family
-       
-      interface Loopback0
-       ip address {{ loopback_ip }} 255.255.255.255
-       
-      ! VXLAN Configuration
-      interface nve1
-       no shutdown
-       source-interface Loopback0
-       host-reachability protocol bgp
-       member vni {{ vni_id }} associate-vrf
-       
-    template_params:
-      - parameter_name: "bgp_as_number"
-        data_type: "STRING"
-        default_value: "65001"
-        required: true
-      - parameter_name: "loopback_ip"
-        data_type: "STRING"
-        required: true
-      - parameter_name: "spine_loopback"
-        data_type: "STRING"
-        required: true
-      - parameter_name: "vni_id"
-        data_type: "STRING"
-        default_value: "10001"
-        required: true
+  template_name: "EVPN_Border_Template"
+  description: "BGP EVPN Border/Edge device configuration"
+  name: EVPN_Border_Template
+  project_name: CatC_BGP_EVPN_Templates
+  project_description: This project contains all the templates for BGP EVPN
+  author: Pawan Singh
+  composite: false
+  custom_params_order: true
+  device_types:
+    - product_family: "Switches and Hubs"
+      product_series: "Cisco Catalyst 9000 Series Switches"
+      product_type: "Cisco Catalyst 9300 Series Switches"
+  software_type: "IOS-XE"
+  language: JINJA
+  template_content: '{% raw %}
+    ! BGP EVPN Border Configuration
+    router bgp {{ bgp_as_number }}
+      bgp router-id {{ loopback_ip }}
+      bgp log-neighbor-changes
+      address-family l2vpn evpn
+      neighbor {{ spine_loopback }} activate
+      neighbor {{ spine_loopback }} send-community both
+      exit-address-family
+      
+    interface Loopback0
+      ip address {{ loopback_ip }} 255.255.255.255
+      
+    ! VXLAN Configuration
+    interface nve1
+      no shutdown
+      source-interface Loopback0
+      host-reachability protocol bgp
+      member vni {{ vni_id }} associate-vrf
+      {% endraw %}'
+    # template_params:
+    #   - parameter_name: "bgp_as_number"
+    #     data_type: "STRING"
+    #     default_value: "65001"
+    #     required: true
+    #   - parameter_name: "loopback_ip"
+    #     data_type: "STRING"
+    #     required: true
+    #   - parameter_name: "spine_loopback"
+    #     data_type: "STRING"
+    #     required: true
+    #   - parameter_name: "vni_id"
+    #     data_type: "STRING"
+    #     default_value: "10001"
+    #     required: true
 
   # EVPN Spine Template
-  - template_name: "EVPN_Spine_Template"
-    template_description: "BGP EVPN Spine Route Reflector configuration"
-    device_types:
-      - product_family: "Switches and Hubs"
-        product_series: "Cisco Catalyst 9000 Series Switches"
-        product_type: "Cisco Catalyst 9400 Series Switches"
-    software_type: "IOS-XE"
-    template_content: |
-      ! BGP EVPN Spine Route Reflector Configuration
-      router bgp {{ bgp_as_number }}
-       bgp router-id {{ loopback_ip }}
-       bgp log-neighbor-changes
-       address-family l2vpn evpn
-        neighbor EVPN_LEAFS peer-group
-        neighbor EVPN_LEAFS route-reflector-client
-        neighbor EVPN_LEAFS send-community both
-       exit-address-family
-       
-      interface Loopback0
-       ip address {{ loopback_ip }} 255.255.255.255
-       
-    template_params:
-      - parameter_name: "bgp_as_number"
-        data_type: "STRING"
-        default_value: "65001"
-        required: true
-      - parameter_name: "loopback_ip"
-        data_type: "STRING"
-        required: true
+- configuration_templates:
+  template_name: "EVPN_Spine_Template"
+  template_description: "BGP EVPN Spine Route Reflector configuration"
+  name: EVPN_Spine_Template
+  project_name: CatC_BGP_EVPN_Templates
+  project_description: This project contains all the templates for BGP EVPN
+  author: Pawan Singh
+  composite: false
+  custom_params_order: true
+  device_types:
+    - product_family: "Switches and Hubs"
+      product_series: "Cisco Catalyst 9000 Series Switches"
+      product_type: "Cisco Catalyst 9300 Series Switches"
+  software_type: "IOS-XE"
+  language: JINJA
+  template_content: '{% raw %}
+    ! BGP EVPN Spine Route Reflector Configuration
+    router bgp {{ bgp_as_number }}
+      bgp router-id {{ loopback_ip }}
+      bgp log-neighbor-changes
+      address-family l2vpn evpn
+      neighbor EVPN_LEAFS peer-group
+      neighbor EVPN_LEAFS route-reflector-client
+      neighbor EVPN_LEAFS send-community both
+      exit-address-family
+    interface Loopback0
+      ip address {{ loopback_ip }} 255.255.255.255
+      {% endraw %}'
+  # template_params:
+  #   - parameter_name: "bgp_as_number"
+  #     data_type: "STRING"
+  #     default_value: "65001"
+  #     required: true
+  #   - parameter_name: "loopback_ip"
+  #     data_type: "STRING"
+  #     required: true
 
-  # EVPN Leaf Template
-  - template_name: "EVPN_Leaf_Template"
-    template_description: "BGP EVPN Leaf VTEP configuration"
-    device_types:
-      - product_family: "Switches and Hubs"
-        product_series: "Cisco Catalyst 9000 Series Switches"
-        product_type: "Cisco Catalyst 9300 Series Switches"
-    software_type: "IOS-XE"
-    template_content: |
-      ! BGP EVPN Leaf Configuration
-      router bgp {{ bgp_as_number }}
-       bgp router-id {{ loopback_ip }}
-       bgp log-neighbor-changes
-       address-family l2vpn evpn
-        neighbor {{ spine_loopback }} activate
-        neighbor {{ spine_loopback }} send-community both
-       exit-address-family
-       
-      interface Loopback0
-       ip address {{ loopback_ip }} 255.255.255.255
-       
-      ! VXLAN Configuration
-      interface nve1
-       no shutdown
-       source-interface Loopback0
-       host-reachability protocol bgp
-       member vni {{ vni_id }}
-       
-      ! SVI Configuration
-      interface Vlan{{ vlan_id }}
-       ip address {{ svi_ip }} {{ svi_mask }}
-       ip helper-address {{ dhcp_helper }}
-       
-    template_params:
-      - parameter_name: "bgp_as_number"
-        data_type: "STRING"
-        default_value: "65001"
-        required: true
-      - parameter_name: "loopback_ip"
-        data_type: "STRING"
-        required: true
-      - parameter_name: "spine_loopback"
-        data_type: "STRING"
-        required: true
-      - parameter_name: "vni_id"
-        data_type: "STRING"
-        required: true
-      - parameter_name: "vlan_id"
-        data_type: "STRING"
-        required: true
-      - parameter_name: "svi_ip"
-        data_type: "STRING"
-        required: true
-      - parameter_name: "svi_mask"
-        data_type: "STRING"
-        default_value: "255.255.255.0"
-        required: true
-      - parameter_name: "dhcp_helper"
-        data_type: "STRING"
-        required: true
-
-  # 802.1X Authentication Template
-  - template_name: "Dot1X_Access_Template"
-    template_description: "802.1X authentication configuration for access ports"
-    device_types:
-      - product_family: "Switches and Hubs"
-    software_type: "IOS-XE"
-    template_content: |
-      ! 802.1X Global Configuration
-      aaa new-model
-      aaa authentication dot1x default group radius
-      aaa authorization network default group radius
+# EVPN Leaf Template
+- configuration_templates:
+  template_name: "EVPN_Leaf_Template"
+  template_description: "BGP EVPN Leaf VTEP configuration"
+  name: EVPN_Leaf_Template
+  project_name: CatC_BGP_EVPN_Templates
+  project_description: This project contains all the templates for BGP EVPN
+  author: Pawan Singh
+  composite: false
+  custom_params_order: true
+  device_types:
+    - product_family: "Switches and Hubs"
+      product_series: "Cisco Catalyst 9000 Series Switches"
+      product_type: "Cisco Catalyst 9300 Series Switches"
+  software_type: "IOS-XE"
+  language: JINJA
+  template_content: '{% raw %}
+    ! BGP EVPN Leaf Configuration
+    router bgp {{ bgp_as_number }}
+      bgp router-id {{ loopback_ip }}
+      bgp log-neighbor-changes
+      address-family l2vpn evpn
+      neighbor {{ spine_loopback }} activate
+      neighbor {{ spine_loopback }} send-community both
+      exit-address-family
       
-      ! RADIUS Configuration
-      radius server ISE-PRIMARY
-       address ipv4 {{ ise_server_ip }} auth-port 1812 acct-port 1813
-       key {{ ise_shared_secret }}
-       
-      ! 802.1X Port Configuration Template
-      interface range GigabitEthernet1/0/1-24
-       switchport mode access
-       switchport access vlan {{ access_vlan }}
-       authentication host-mode multi-auth
-       authentication port-control auto
-       authentication order dot1x mab
-       authentication priority dot1x mab
-       dot1x pae authenticator
-       spanning-tree portfast
-       
-    template_params:
-      - parameter_name: "ise_server_ip"
-        data_type: "STRING"
-        required: true
-      - parameter_name: "ise_shared_secret"
-        data_type: "STRING"
-        required: true
-      - parameter_name: "access_vlan"
-        data_type: "STRING"
-        default_value: "10"
-        required: true
+    interface Loopback0
+      ip address {{ loopback_ip }} 255.255.255.255
+      
+    ! VXLAN Configuration
+    interface nve1
+      no shutdown
+      source-interface Loopback0
+      host-reachability protocol bgp
+      member vni {{ vni_id }}
+      
+    ! SVI Configuration
+    interface Vlan{{ vlan_id }}
+      ip address {{ svi_ip }} {{ svi_mask }}
+      ip helper-address {{ dhcp_helper }}
+      {% endraw %}'
+  # template_params:
+  #   - parameter_name: "bgp_as_number"
+  #     data_type: "STRING"
+  #     default_value: "65001"
+  #     required: true
+  #   - parameter_name: "loopback_ip"
+  #     data_type: "STRING"
+  #     required: true
+  #   - parameter_name: "spine_loopback"
+  #     data_type: "STRING"
+  #     required: true
+  #   - parameter_name: "vni_id"
+  #     data_type: "STRING"
+  #     required: true
+  #   - parameter_name: "vlan_id"
+  #     data_type: "STRING"
+  #     required: true
+  #   - parameter_name: "svi_ip"
+  #     data_type: "STRING"
+  #     required: true
+  #   - parameter_name: "svi_mask"
+  #     data_type: "STRING"
+  #     default_value: "255.255.255.0"
+  #     required: true
+  #   - parameter_name: "dhcp_helper"
+  #     data_type: "STRING"
+  #     required: true
 
-# Template Deployment Configuration
-template_deploy_details:
-  - template_name: "EVPN_Border_Template"
-    target_info:
-      - id: "10.10.100.10"
-        type: "MANAGED_DEVICE_IP"
-        params:
-          bgp_as_number: "65001"
-          loopback_ip: "10.255.255.10"
-          spine_loopback: "10.255.255.11"
-          vni_id: "10001"
-          
-  - template_name: "EVPN_Spine_Template"
-    target_info:
-      - id: "10.10.100.11"
-        type: "MANAGED_DEVICE_IP"
-        params:
-          bgp_as_number: "65001"
-          loopback_ip: "10.255.255.11"
-          
-  - template_name: "Dot1X_Access_Template"
-    target_info:
-      - id: "10.10.100.12"
-        type: "MANAGED_DEVICE_IP"
-        params:
-          ise_server_ip: "10.195.243.126"
-          ise_shared_secret: "Cisco#123!"
-          access_vlan: "10"
+# 802.1X Authentication Template
+- configuration_templates:
+  template_name: "Dot1X_Access_Template"
+  template_description: "802.1X authentication configuration for access ports"
+  name: Dot1X_Access_Template
+  project_name: CatC_BGP_EVPN_Templates
+  project_description: This project contains all the templates for BGP EVPN
+  author: Pawan Singh
+  composite: false
+  custom_params_order: true
+  device_types:
+    - product_family: "Switches and Hubs"
+      product_series: "Cisco Catalyst 9000 Series Switches"
+      product_type: "Cisco Catalyst 9300 Series Switches"
+  software_type: "IOS-XE"
+  language: JINJA
+  template_content: '{% raw %}
+    ! 802.1X Global Configuration
+    aaa new-model
+    aaa authentication dot1x default group radius
+    aaa authorization network default group radius
+    
+    ! RADIUS Configuration
+    radius server ISE-PRIMARY
+      address ipv4 {{ ise_server_ip }} auth-port 1812 acct-port 1813
+      key {{ ise_shared_secret }}
+      
+    ! 802.1X Port Configuration Template
+    interface range GigabitEthernet1/0/1-24
+      switchport mode access
+      switchport access vlan {{ access_vlan }}
+      authentication host-mode multi-auth
+      authentication port-control auto
+      authentication order dot1x mab
+      authentication priority dot1x mab
+      dot1x pae authenticator
+      spanning-tree portfast
+      {% endraw %}'
+  # template_params:
+  #   - parameter_name: "ise_server_ip"
+  #     data_type: "STRING"
+  #     required: true
+  #   - parameter_name: "ise_shared_secret"
+  #     data_type: "STRING"
+  #     required: true
+  #   - parameter_name: "access_vlan"
+  #     data_type: "STRING"
+  #     default_value: "10"
+  #     required: true
 
-# Template Settings
-template_settings:
-  auto_commit: true
-  wait_for_completion: true
-  max_wait_time: 600
-  template_versioning: true
+# # Template Deployment Configuration
+# template_deploy_details:
+#   - template_name: "EVPN_Border_Template"
+#     target_info:
+#       - id: "10.10.100.10"
+#         type: "MANAGED_DEVICE_IP"
+#         params:
+#           bgp_as_number: "65001"
+#           loopback_ip: "10.255.255.10"
+#           spine_loopback: "10.255.255.11"
+#           vni_id: "10001"
+          
+#   - template_name: "EVPN_Spine_Template"
+#     target_info:
+#       - id: "10.10.100.11"
+#         type: "MANAGED_DEVICE_IP"
+#         params:
+#           bgp_as_number: "65001"
+#           loopback_ip: "10.255.255.11"
+          
+#   - template_name: "Dot1X_Access_Template"
+#     target_info:
+#       - id: "10.10.100.12"
+#         type: "MANAGED_DEVICE_IP"
+#         params:
+#           ise_server_ip: "10.195.243.126"
+#           ise_shared_secret: "Cisco#123!"
+#           access_vlan: "10"
+
+# # Template Settings
+# template_settings:
+#   auto_commit: true
+#   wait_for_completion: true
+#   max_wait_time: 600
+#   template_versioning: true

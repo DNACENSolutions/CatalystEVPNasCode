@@ -47,65 +47,84 @@
       - sites
       - validate
 
-    # # # Phase 3: Global Credentials
-    # - name: "Phase 3: Configure Global Credentials"
-    #   include_role:
-    #     name: catalyst_center_device_credentials
-    #   tags: ['credentials']
+    # # Phase 3: Global Credentials
+    - name: "Phase 3: Configure Global Credentials"
+      include_role:
+        name: catalyst_center_device_credentials
+      tags: 
+      - credentials
+      - validate
 
-    # # Phase 4: Network Settings
-    # - name: "Phase 4: Configure Network Settings"
-    #   include_role:
-    #     name: catalyst_center_network_settings
-    #   tags: ['network']
+    # Phase 4: Network Settings
+    - name: "Phase 4: Configure Network Settings"
+      include_role:
+        name: catalyst_center_network_settings
+      tags: 
+      - network
+      - validate
 
-    # # Phase 5: IP Pool Management
-    # - name: "Phase 5: Configure IP Pools"
-    #   include_role:
-    #     name: catalyst_center_network_settings
-    #   tags: ['ippools']
+    # Phase 5: IP Pool Management
+    - name: "Phase 5: Configure IP Pools"
+      include_role:
+        name: catalyst_center_ipam
+      tags: 
+      - ippools
+      - validate
 
-    # # Phase 6: Device Discovery
-    # - name: "Phase 6: Discover Seed Devices"
-    #   include_role:
-    #     name: catalyst_center_device_discovery
-    #   tags: ['discovery']
+    # Phase 6: Device Discovery
+    - name: "Phase 6: Discover Seed Devices"
+      include_role:
+        name: catalyst_center_device_discovery
+      tags: 
+      - discovery
+      - validate
 
     # # Phase 7: Site Assignment
     # - name: "Phase 7: Assign Devices to Sites"
     #   include_role:
     #     name: catalyst_center_device_provision
-    #   tags: ['assignment']
+    #   tags: 
+    #   - assignment
+    #   - validate
 
     # # Phase 8: LAN Automation
     # - name: "Phase 8: Execute LAN Automation"
     #   include_role:
     #     name: catalyst_center_lan_automation
-    #   tags: ['lanautomation']
+    #   tags: 
+    #   - lanautomation
+    #   - validate
 
-    # # Phase 9: Device Provisioning
-    # - name: "Phase 9: Provision All Devices"
-    #   include_role:
-    #     name: catalyst_center_device_provision
-    #   tags: ['provision']
+    # Phase 9: Device Provisioning
+    - name: "Phase 9: Provision All Devices"
+      include_role:
+        name: catalyst_center_device_provision
+      tags: 
+      - provision
+      - validate
 
-    # # Phase 10: Template Creation
-    # - name: "Phase 10: Create EVPN Templates"
-    #   include_role:
-    #     name: catalyst_center_template_creation
-    #   tags: ['templates']
+    # Phase 10: Template Creation
+    - name: "Phase 10: Create EVPN Templates"
+      include_role:
+        name: catalyst_center_device_templates
+      tags: 
+      - templates
+      - validate
 
     # # Phase 11: Template Deployment
     # - name: "Phase 11: Deploy Templates to Devices"
     #   include_role:
-    #     name: catalyst_center_template_deployment
-    #   tags: ['deploy']
+    #     name: catalyst_center_device_templates
+    #   tags: 
+    #   - deploy
+    #   - validate
 
     # # Phase 12: Validation
     # - name: "Phase 12: Validate EVPN Underlay and Overlay"
     #   include_role:
     #     name: catalyst_center_evpn_validation
-    #   tags: ['validate']
+    #   tags: 
+    #   - validate
 
     - name: "Display deployment completion banner"
       debug:
