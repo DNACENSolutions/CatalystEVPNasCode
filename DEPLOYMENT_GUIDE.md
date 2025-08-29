@@ -120,7 +120,7 @@ Cisco DNAC Collection: Latest version
 
 1. **Clone the Repository:**
    ```bash
-   git clone <repository-url>
+   git clone git@github.com:DNACENSolutions/CatalystEVPNasCode.git
    cd CatalystEVPNasCode
    ```
 
@@ -129,16 +129,17 @@ Cisco DNAC Collection: Latest version
    pip install -r requirements.txt
    ```
 
-3. **Install Ansible Collections:**
+3. **Install Ansible Collections and Roles:**
    ```bash
    ansible-galaxy collection install cisco.dnac
+   ansible-galaxy collection install -r role_requirements.yml
    ```
 
 4. **Set Environment Variables:**
    ```bash
-   export CATALYST_CENTER_HOSTNAME="your-dnac-hostname.domain.com"
-   export CATALYST_CENTER_USERNAME="admin"
-   export CATALYST_CENTER_PASSWORD="your-secure-password"
+   export HOSTNAME="your-dnac-hostname.domain.com"
+   export USERNAME="admin"
+   export PASSWORD="your-secure-password"
    ```
 
 ### Step 2: Configuration Customization
