@@ -4,3 +4,6 @@
 [submodule "data/catalyst-center-bgp-evpn-examples"]
 	path = data/catalyst-center-bgp-evpn-examples
 	url = https://github.com/imanassypov/CatalystCenter-BGP-EVPN-VXLAN.git
+[submodule "catalyst-center-roles"]
+	path = catalyst-center-roles
+	url = https://github.com/DNACENSolutions/catalyst_center_ansible_roles.git

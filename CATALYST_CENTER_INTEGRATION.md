@@ -16,6 +16,13 @@ CatalystEVPNasCode/
 │       ├── device_templates/    # Configuration templates
 │       ├── ise_radius_integration/ # ISE integration
 │       └── ... (25+ more workflows)
+├── catalyst-center-roles/        # Git submodule with standardized Ansible roles
+│   ├── catalyst_center_device_discovery/     # Device discovery role
+│   ├── catalyst_center_device_provision/     # Device provisioning role
+│   ├── catalyst_center_sda_fabric/          # SDA fabric management role
+│   ├── catalyst_center_network_settings/    # Network settings role
+│   ├── catalyst_center_device_templates/    # Template management role
+│   └── ... (30+ more roles)
 ├── playbooks/                   # Project-specific EVPN playbooks
 ├── data/                       # EVPN configuration data
 │   ├── bgp_evpn_site_01.yml    # Site-specific configurations
@@ -88,6 +95,103 @@ The `data/catalyst-center-bgp-evpn-examples/` submodule provides comprehensive J
 
 # Example: Review fabric EVPN template
 cat data/catalyst-center-bgp-evpn-examples/BGP_EVPN_rev2/FABRIC-EVPN.j2
+```
+
+## 🎭 Standardized Ansible Roles
+
+The `catalyst-center-roles/` submodule provides a collection of standardized Ansible roles following unified design patterns:
+
+### Role Design Principles
+- **Standardized State Management**: All roles use `state` variable (`merged`/`deleted`) for CRUD operations
+- **Simplified Variables**: Single list variable per role (e.g., `discovery_details`, `provision_details`)
+- **Consistent Structure**: Each role follows the same directory structure and naming conventions
+- **Comprehensive Documentation**: Detailed README with examples for each role
+
+### Available Role Categories
+
+#### **Device Management Roles**
+- `catalyst_center_device_credentials`: Global device credentials management
+- `catalyst_center_device_discovery`: Network discovery job automation
+- `catalyst_center_device_inventory`: Device inventory management
+- `catalyst_center_device_provision`: Device provisioning to sites
+- `catalyst_center_device_templates`: Configuration template management
+
+#### **Network Infrastructure Roles**
+- `catalyst_center_network_settings`: Global network settings (NTP, SNMP, etc.)
+- `catalyst_center_ipam`: IP pool and subnet management
+- `catalyst_center_site_design`: Site hierarchy management (areas, buildings, floors)
+- `catalyst_center_swim`: Software Image Management (SWIM)
+
+#### **SDA Fabric Roles**
+- `catalyst_center_sda_fabric`: SDA fabric creation and management
+- `catalyst_center_sda_device_roles`: Device role assignment in SDA fabric
+- `catalyst_center_sda_hostonboarding`: Host onboarding policies and anycast gateways
+- `catalyst_center_sda_transits`: SDA transit network management
+- `catalyst_center_sda_virtual_network_gateways`: Virtual network gateway management
+
+#### **Security & Integration Roles**
+- `catalyst_center_ise_aaa_integration`: ISE and AAA server integration
+- `catalyst_center_user_role`: User roles and permissions management
+- `catalyst_center_events_and_notifications`: Event and notification configuration
+
+#### **Wireless & Access Point Roles**
+- `catalyst_center_wireless_design`: Wireless network design
+- `catalyst_center_accesspoints_configuration`: Access point configuration
+- `catalyst_center_network_profile_wireless`: Wireless network profiles
+
+### Role Usage Examples
+
+#### Basic Role Usage Pattern
+```yaml
+---
+- name: Configure device discovery
+  ansible.builtin.include_role:
+    name: catalyst_center_device_discovery
+  vars:
+    state: merged
+    discovery_details:
+      - discovery_name: "Site1-Discovery"
+        ip_address_list: ["10.1.1.0/24"]
+        discovery_type: "Range"
+        protocol_order: "ssh,telnet"
+        timeout: 5
+        retry_count: 3
+```
+
+#### Advanced Multi-Role Playbook
+```yaml
+---
+- name: Complete SDA Fabric Setup
+  hosts: catalyst_center
+  gather_facts: false
+  tasks:
+    - name: Configure network settings
+      ansible.builtin.include_role:
+        name: catalyst_center_network_settings
+      vars:
+        state: merged
+        network_settings_details:
+          - ntp_server: ["pool.ntp.org"]
+            timezone: "America/New_York"
+    
+    - name: Create SDA fabric
+      ansible.builtin.include_role:
+        name: catalyst_center_sda_fabric
+      vars:
+        state: merged
+        sda_fabric_details:
+          - fabric_name: "Campus-Fabric"
+            fabric_type: "FABRIC_SITE"
+    
+    - name: Assign device roles
+      ansible.builtin.include_role:
+        name: catalyst_center_sda_device_roles
+      vars:
+        state: merged
+        sda_device_role_details:
+          - device_ip: "10.1.1.10"
+            role: "BORDER_NODE"
+            fabric_name: "Campus-Fabric"
 ```
 
 ## 🚀 Quick Start Examples

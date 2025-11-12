@@ -1,6 +1,15 @@
 ---
 # Ansible Galaxy Requirements File
 # Install required roles for Catalyst Center EVPN deployment
+#
+# NOTE: Catalyst Center roles are now available as a Git submodule in catalyst-center-roles/
+# You can use roles directly from the submodule or install them via Galaxy using this file.
+#
+# To use roles from submodule, add to ansible.cfg:
+# roles_path = ./catalyst-center-roles
+#
+# To install via Galaxy (alternative approach):
+# ansible-galaxy role install -r role_requirements.yml
 
 # ISE Integration Role
 - src: https://github.com/DNACENSolutions/catalyst_center_ansible_roles.git
@@ -49,3 +58,19 @@
   scm: git
   version: main
   name: catalyst_center_device_templates
+
+# SDA Fabric Roles
+- src: https://github.com/DNACENSolutions/catalyst_center_ansible_roles.git
+  scm: git
+  version: main
+  name: catalyst_center_sda_fabric
+
+- src: https://github.com/DNACENSolutions/catalyst_center_ansible_roles.git
+  scm: git
+  version: main
+  name: catalyst_center_sda_device_roles
+
+- src: https://github.com/DNACENSolutions/catalyst_center_ansible_roles.git
+  scm: git
+  version: main
+  name: catalyst_center_sda_hostonboarding
