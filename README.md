@@ -2,6 +2,8 @@
 
 Automated BGP EVPN fabric deployment using Catalyst Center (DNAC) and Ansible workflows. This project provides complete automation for multi-site EVPN-VXLAN fabric deployment including underlay configuration, overlay provisioning, and 802.1X authentication integration.
 
+**🆕 Now includes 30+ Cisco-validated Catalyst Center workflows** via Git submodule integration with the [catalyst-center-ansible-iac](https://github.com/cisco-en-programmability/catalyst-center-ansible-iac) repository.
+
 ## 🚀 Features
 
 - **Complete EVPN Automation**: End-to-end BGP EVPN-VXLAN fabric deployment
@@ -12,6 +14,12 @@ Automated BGP EVPN fabric deployment using Catalyst Center (DNAC) and Ansible wo
 - **Validation & Verification**: Pre-deployment validation with comprehensive schema checking
 - **Data-Driven**: YAML-based configuration with validation
 - **IPv4/IPv6 Dual Stack**: Support for both IPv4 and IPv6 addressing
+- **Comprehensive Workflows**: 30+ validated playbooks for complete network lifecycle management
+
+## 📚 Documentation
+
+- **[Catalyst Center Integration Guide](CATALYST_CENTER_INTEGRATION.md)**: Complete guide for using the 30+ integrated workflows
+- **[Deployment Guide](DEPLOYMENT_GUIDE.md)**: Step-by-step EVPN deployment instructions
 
 ## 📋 Prerequisites
 
@@ -28,10 +36,15 @@ Automated BGP EVPN fabric deployment using Catalyst Center (DNAC) and Ansible wo
 
 ## 🛠 Installation
 
-1. **Clone the repository:**
+1. **Clone the repository with submodules:**
    ```bash
-   git clone git@github.com:DNACENSolutions/CatalystEVPNasCode.git
+   git clone --recursive git@github.com:DNACENSolutions/CatalystEVPNasCode.git
    cd CatalystEVPNasCode
+   ```
+   
+   Or if already cloned, initialize the submodules:
+   ```bash
+   git submodule update --init --recursive
    ```
 
 2. **Install Python requirements:**
