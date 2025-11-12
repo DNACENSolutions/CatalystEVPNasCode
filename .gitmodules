@@ -1,3 +1,6 @@
 [submodule "catalyst-center-iac"]
 	path = catalyst-center-iac
 	url = https://github.com/cisco-en-programmability/catalyst-center-ansible-iac.git
+[submodule "data/catalyst-center-bgp-evpn-examples"]
+	path = data/catalyst-center-bgp-evpn-examples
+	url = https://github.com/imanassypov/CatalystCenter-BGP-EVPN-VXLAN.git

@@ -2,7 +2,9 @@
 
 Automated BGP EVPN fabric deployment using Catalyst Center (DNAC) and Ansible workflows. This project provides complete automation for multi-site EVPN-VXLAN fabric deployment including underlay configuration, overlay provisioning, and 802.1X authentication integration.
 
-**🆕 Now includes 30+ Cisco-validated Catalyst Center workflows** via Git submodule integration with the [catalyst-center-ansible-iac](https://github.com/cisco-en-programmability/catalyst-center-ansible-iac) repository.
+**🆕 Now includes comprehensive automation resources:**
+- **30+ Cisco-validated Catalyst Center workflows** via [catalyst-center-ansible-iac](https://github.com/cisco-en-programmability/catalyst-center-ansible-iac) submodule
+- **Extensive BGP EVPN VXLAN template collection** via [CatalystCenter-BGP-EVPN-VXLAN](https://github.com/imanassypov/CatalystCenter-BGP-EVPN-VXLAN) submodule
 
 ## 🚀 Features
 
@@ -15,6 +17,7 @@ Automated BGP EVPN fabric deployment using Catalyst Center (DNAC) and Ansible wo
 - **Data-Driven**: YAML-based configuration with validation
 - **IPv4/IPv6 Dual Stack**: Support for both IPv4 and IPv6 addressing
 - **Comprehensive Workflows**: 30+ validated playbooks for complete network lifecycle management
+- **Professional Templates**: Production-ready Jinja2 templates for Campus BGP EVPN VXLAN fabrics
 
 ## 📚 Documentation
 

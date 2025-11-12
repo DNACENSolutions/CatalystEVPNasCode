@@ -1,6 +1,6 @@
 # Catalyst Center Ansible IaC Integration
 
-This project now includes the comprehensive Catalyst Center Ansible IaC workflows as a Git submodule, providing access to 30+ validated playbooks for complete network automation.
+This project now includes comprehensive Catalyst Center automation resources via Git submodules, providing access to 30+ validated playbooks and extensive BGP EVPN VXLAN template collections for complete network automation.
 
 ## 📁 Repository Structure
 
@@ -18,6 +18,12 @@ CatalystEVPNasCode/
 │       └── ... (25+ more workflows)
 ├── playbooks/                   # Project-specific EVPN playbooks
 ├── data/                       # EVPN configuration data
+│   ├── bgp_evpn_site_01.yml    # Site-specific configurations
+│   └── catalyst-center-bgp-evpn-examples/  # BGP EVPN template collection
+│       ├── BGP EVPN/           # Jinja2 templates for fabric deployment
+│       ├── BGP_EVPN_rev2/      # Enhanced templates with IPSEC support
+│       ├── EVPN_Project.json   # Catalyst Center project export
+│       └── EVPN_Templates.json # Template definitions
 └── inventory/                  # Ansible inventory
 ```
 
@@ -46,6 +52,43 @@ CatalystEVPNasCode/
 - **SWIM**: Software image management
 - **Network Compliance**: Configuration compliance checking
 - **Assurance**: Network health monitoring and analytics
+
+## 🏗️ BGP EVPN Template Collection
+
+The `data/catalyst-center-bgp-evpn-examples/` submodule provides comprehensive Jinja2 templates for Campus BGP EVPN VXLAN fabric deployment:
+
+### Template Categories
+- **FABRIC-* Templates**: Core fabric configuration templates
+  - `FABRIC-VRF.j2`: VRF configuration for multi-tenancy
+  - `FABRIC-LOOPBACKS.j2`: Loopback interface configuration
+  - `FABRIC-NVE.j2`: Network Virtualization Edge (NVE) interfaces
+  - `FABRIC-EVPN.j2`: BGP EVPN control plane configuration
+  - `FABRIC-OVERLAY.j2`: VXLAN overlay network services
+  - `FABRIC-MCAST.j2`: Multicast configuration for BUM traffic
+  - `FABRIC-NAC-IOT.j2`: Network Access Control for IoT segments
+
+- **DEFN-* Templates**: Definition and variable templates
+  - `DEFN-ROLES.j2`: Device role definitions (spine/leaf/border)
+  - `DEFN-VRF.j2`: VRF definitions and parameters
+  - `DEFN-OVERLAY.j2`: Overlay network definitions
+  - `DEFN-L3OUT.j2`: Layer 3 external connectivity
+
+### Enhanced Features (BGP_EVPN_rev2)
+- **IPSEC Support**: Hardware-accelerated encryption for tenant traffic
+- **Multi-Cluster BGP EVPN**: Border switch integration
+- **Advanced Multicast**: Optimized PIM configuration
+- **IoT Segmentation**: Specialized templates for IoT tenant isolation
+
+### Template Usage
+```bash
+# Import templates into Catalyst Center
+# 1. Use EVPN_Project.json for complete project import
+# 2. Use EVPN_Templates.json for individual template import
+# 3. Customize Jinja2 templates in BGP EVPN/ or BGP_EVPN_rev2/ directories
+
+# Example: Review fabric EVPN template
+cat data/catalyst-center-bgp-evpn-examples/BGP_EVPN_rev2/FABRIC-EVPN.j2
+```
 
 ## 🚀 Quick Start Examples
 
