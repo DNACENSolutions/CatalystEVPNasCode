@@ -1,0 +1,409 @@
+# BGP EVPN VXLAN Campus Fabric Data Model
+# This YAML file provides a comprehensive data model for controlling
+# the BGP EVPN template generation from the BGP_EVPN_rev2 templates
+#
+# Usage: This data model can be used with Jinja2 templates to generate
+# device-specific configurations for BGP EVPN VXLAN Campus Fabric
+
+# =============================================================================
+# FABRIC GLOBAL SETTINGS
+# =============================================================================
+fabric:
+  # BGP AS Number for the entire fabric
+  bgp_asn: 65001
+  
+  # Underlay routing protocol configuration
+  underlay:
+    protocol: ospf
+    instance_id: 1
+    area: 0
+  
+  # IPSec underlay for multi-cluster connectivity
+  ipsec_underlay:
+    protocol: ospf
+    instance_id: 100
+    area: 0
+
+# =============================================================================
+# VNI OFFSET CONFIGURATION
+# =============================================================================
+vni_offsets:
+  # L2 VNI offset (L2VNI = L2VNIOFFSET + VLAN_ID)
+  l2_vni_offset: 10000
+  
+  # L3 VNI offset (L3VNI = L3VNIOFFSET + VRF_ID)
+  l3_vni_offset: 50
+
+# =============================================================================
+# MULTICAST CONFIGURATION
+# =============================================================================
+multicast:
+  # Fabric RP configuration for EVPN multicast
+  fabric_rp:
+    address: "172.16.255.254"
+    scopes:
+      - "239.190.0.0 0.0.255.255"
+  
+  # Enterprise RP configuration for brownfield VLANs
+  enterprise_rp:
+    address: "172.17.254.100"
+    scopes:
+      - "238.190.0.0 0.0.255.255"
+
+# =============================================================================
+# DEVICE INVENTORY AND ROLES
+# =============================================================================
+devices:
+  # Device role definitions
+  roles:
+    spine:
+      - spine01.dcloud.cisco.com
+      - spine02.dcloud.cisco.com
+    
+    route_reflector:
+      - spine01.dcloud.cisco.com
+      - spine02.dcloud.cisco.com
+    
+    leaf:
+      - leaf01.dcloud.cisco.com
+      - leaf02.dcloud.cisco.com
+      - leaf03.dcloud.cisco.com
+    
+    border:
+      - border01.dcloud.cisco.com
+      - border02.dcloud.cisco.com
+    
+    # All BGP EVPN clients (leaf + border)
+    client:
+      - leaf01.dcloud.cisco.com
+      - leaf02.dcloud.cisco.com
+      - leaf03.dcloud.cisco.com
+      - border01.dcloud.cisco.com
+      - border02.dcloud.cisco.com
+
+  # Loopback interface assignments
+  loopbacks:
+    # Underlay loopback addresses (Loopback0)
+    underlay:
+      spine01.dcloud.cisco.com: "172.16.255.1"
+      spine02.dcloud.cisco.com: "172.16.255.2"
+      leaf01.dcloud.cisco.com: "172.16.255.3"
+      leaf02.dcloud.cisco.com: "172.16.255.4"
+      leaf03.dcloud.cisco.com: "172.16.255.5"
+      border01.dcloud.cisco.com: "172.16.255.6"
+      border02.dcloud.cisco.com: "172.16.255.7"
+    
+    # IPSec loopback addresses (Loopback1)
+    ipsec:
+      border01.dcloud.cisco.com: "172.16.255.60"
+      border02.dcloud.cisco.com: "172.16.255.70"
+      dmz01.dcloud.cisco.com: "172.16.255.201"
+    
+    # Multi-cluster loopback addresses (Loopback2)
+    multi_cluster:
+      border01.dcloud.cisco.com: "172.16.255.66"
+      border02.dcloud.cisco.com: "172.16.255.77"
+      dmz01.dcloud.cisco.com: "172.16.255.210"
+    
+    # Overlay VRF loopback prefixes
+    overlay_prefixes:
+      red: "10.1.91."
+      blue: "10.1.92."
+      green: "10.1.93."
+    
+    # Loopback interface names
+    interface_names:
+      underlay: "Loopback0"
+      anycast: "Loopback2"
+      ipsec: "Loopback1"
+      multi_cluster: "Loopback2"
+
+# =============================================================================
+# VRF DEFINITIONS
+# =============================================================================
+vrfs:
+  # VRF definitions with multicast settings
+  definitions:
+    - id: "901"
+      name: "red"
+      mdt_default: "239.190.0.1"
+      mdt_data: "239.190.1.0"
+    
+    - id: "902"
+      name: "blue"
+      mdt_default: "239.190.0.2"
+      mdt_data: "239.190.2.0"
+    
+    - id: "903"
+      name: "green"
+      mdt_default: "239.190.0.3"
+      mdt_data: "239.190.3.0"
+
+  # VRF to device mappings (which VRFs are deployed on which devices)
+  device_mappings:
+    spine01.dcloud.cisco.com:
+      - "901"
+    
+    spine02.dcloud.cisco.com:
+      - "901"
+    
+    leaf01.dcloud.cisco.com:
+      - "901"
+      - "902"
+      - "903"
+    
+    leaf02.dcloud.cisco.com:
+      - "901"
+      - "902"
+      - "903"
+    
+    leaf03.dcloud.cisco.com:
+      - "901"
+      - "902"
+      - "903"
+    
+    border01.dcloud.cisco.com:
+      - "902"
+      - "903"
+    
+    border02.dcloud.cisco.com:
+      - "902"
+      - "903"
+
+# =============================================================================
+# OVERLAY NETWORK DEFINITIONS
+# =============================================================================
+overlay_networks:
+  # VRF-specific VLAN and SVI definitions
+  - vrf: "red"
+    vlans:
+      "101":
+        name: "corp-101"
+        ip_address: "10.1.11.1 255.255.255.0"
+        mac_address: "0000.0901.0101"
+        dhcp_helper: "198.18.5.253"
+        bum_address: "239.190.100.101"
+      
+      "201":
+        name: "corp-201"
+        ip_address: "10.2.22.1 255.255.255.0"
+        mac_address: "0000.0901.0201"
+        dhcp_helper: "198.18.5.253"
+        bum_address: "239.190.100.201"
+
+  - vrf: "blue"
+    vlans:
+      "401":
+        name: "iot-blue-401"
+        ip_address: "198.18.10.1 255.255.255.0"
+        mac_address: "0000.0902.0401"
+        dhcp_helper: "198.18.7.253"
+        bum_address: "239.190.100.41"
+
+  - vrf: "green"
+    vlans:
+      "501":
+        name: "iot-green-501"
+        ip_address: "198.18.11.1 255.255.255.0"
+        mac_address: "0000.0903.0501"
+        dhcp_helper: "198.18.8.253"
+        bum_address: "239.190.100.51"
+
+# =============================================================================
+# LAYER 3 EXTERNAL CONNECTIVITY (L3OUT)
+# =============================================================================
+l3_external:
+  # L3OUT definitions for external connectivity
+  connections:
+    - vrf: "red"
+      device: "spine01.dcloud.cisco.com"
+      neighbor_asn: 65002
+      interfaces:
+        "GigabitEthernet1/0/7.2":
+          name: "uplink1"
+          vlan: "2"
+          ip_address: "10.255.255.1 255.255.255.252"
+          neighbor_ip: "10.255.255.2"
+        
+        "GigabitEthernet1/0/8.2":
+          name: "uplink2"
+          vlan: "2"
+          ip_address: "10.255.255.5 255.255.255.252"
+          neighbor_ip: "10.255.255.6"
+    
+    - vrf: "red"
+      device: "spine02.dcloud.cisco.com"
+      neighbor_asn: 65002
+      interfaces:
+        "GigabitEthernet1/0/7.2":
+          name: "uplink1"
+          vlan: "2"
+          ip_address: "10.255.255.13 255.255.255.252"
+          neighbor_ip: "10.255.255.14"
+        
+        "GigabitEthernet1/0/8.2":
+          name: "uplink2"
+          vlan: "2"
+          ip_address: "10.255.255.9 255.255.255.252"
+          neighbor_ip: "10.255.255.10"
+
+  # Aggregate routes to advertise externally
+  aggregate_routes:
+    - "10.1.11.0 255.255.255.0"
+    - "10.2.22.0 255.255.255.0"
+
+# =============================================================================
+# NETWORK ACCESS CONTROL (NAC) FOR IOT
+# =============================================================================
+network_access_control:
+  # NAC server definitions for IoT device authentication
+  servers:
+    - vrf: "blue"
+      server_ip: "198.18.7.254"
+      shared_key: "C!sco123"
+
+# =============================================================================
+# IPSEC CONFIGURATION FOR MULTI-CLUSTER
+# =============================================================================
+ipsec:
+  # IPSec tunnel definitions for multi-cluster connectivity
+  tunnels:
+    dmz01.dcloud.cisco.com:
+      - tunnel_ip: "10.100.100.1 255.255.255.252"
+        peer_ip: "10.100.100.2"
+        tunnel_destination: "172.16.255.60"
+        tunnel_mode: "gre ip"
+        peer_bgp_asn: 65001
+      
+      - tunnel_ip: "10.100.101.1 255.255.255.252"
+        peer_ip: "10.100.101.2"
+        tunnel_destination: "172.16.255.70"
+        tunnel_mode: "gre ip"
+        peer_bgp_asn: 65001
+    
+    border01.dcloud.cisco.com:
+      - tunnel_ip: "10.100.100.2 255.255.255.252"
+        peer_ip: "10.100.100.1"
+        tunnel_destination: "172.16.255.201"
+        tunnel_mode: "gre ip"
+        peer_bgp_asn: 65003
+    
+    border02.dcloud.cisco.com:
+      - tunnel_ip: "10.100.101.2 255.255.255.252"
+        peer_ip: "10.100.101.1"
+        tunnel_destination: "172.16.255.201"
+        tunnel_mode: "gre ip"
+        peer_bgp_asn: 65003
+
+# =============================================================================
+# TEMPLATE VARIABLE MAPPINGS
+# =============================================================================
+# This section maps the YAML data model to template variables
+# Used by automation scripts to convert YAML to template variables
+
+template_mappings:
+  # Global fabric settings
+  FABRIC_BGP_ASN: "fabric.bgp_asn"
+  FABRIC_UNDERLAY: "fabric.underlay"
+  FABRIC_IPSEC_UNDERLAY: "fabric.ipsec_underlay"
+  
+  # VNI offsets
+  L2VNIOFFSET: "vni_offsets.l2_vni_offset"
+  L3VNIOFFSET: "vni_offsets.l3_vni_offset"
+  
+  # Multicast settings
+  FABRIC_RP_ADDR: "multicast.fabric_rp.address"
+  FABRIC_RP_SCOPES: "multicast.fabric_rp.scopes"
+  ENTERPRISE_RP_ADDR: "multicast.enterprise_rp.address"
+  ENTERPRISE_RP_SCOPES: "multicast.enterprise_rp.scopes"
+  
+  # Device and role mappings
+  DEFN_NODE_ROLES: "devices.roles"
+  DEFN_LOOP_UNDERLAY: "devices.loopbacks.underlay"
+  DEFN_LOOP_IPSEC: "devices.loopbacks.ipsec"
+  DEFN_LOOP_MCLUSTER: "devices.loopbacks.multi_cluster"
+  DEFN_LOOP_OVERLAY: "devices.loopbacks.overlay_prefixes"
+  DEFN_LOOP_NAME: "devices.loopbacks.interface_names"
+  
+  # VRF definitions
+  DEFN_VRF: "vrfs.definitions"
+  DEFN_VRF_TO_NODE: "vrfs.device_mappings"
+  
+  # Overlay networks
+  DEFN_OVERLAY: "overlay_networks"
+  
+  # L3 external connectivity
+  DEFN_L3OUT: "l3_external.connections"
+  DEFN_L3OUT_AGGREGATES: "l3_external.aggregate_routes"
+  
+  # NAC IoT
+  DEFN_NAC_IOT: "network_access_control.servers"
+  
+  # IPSec
+  DEFN_IPSEC: "ipsec.tunnels"
+
+# =============================================================================
+# VALIDATION RULES
+# =============================================================================
+# These rules can be used by validation scripts to ensure data consistency
+
+validation:
+  required_fields:
+    - fabric.bgp_asn
+    - devices.roles.spine
+    - devices.roles.route_reflector
+    - devices.loopbacks.underlay
+    - vrfs.definitions
+    - overlay_networks
+  
+  constraints:
+    # BGP ASN must be in private range
+    bgp_asn_range: [64512, 65535]
+    
+    # VRF IDs must be unique
+    unique_vrf_ids: true
+    
+    # All devices in roles must have underlay loopbacks
+    devices_have_loopbacks: true
+    
+    # VRF device mappings must reference valid VRF IDs
+    valid_vrf_mappings: true
+    
+    # Overlay VLANs must be unique across all VRFs
+    unique_vlan_ids: true
+
+# =============================================================================
+# DEPLOYMENT SCENARIOS
+# =============================================================================
+# Pre-defined deployment scenarios for common use cases
+
+scenarios:
+  # Basic 3-VRF deployment
+  basic_3vrf:
+    description: "Basic deployment with red, blue, green VRFs"
+    active_vrfs: ["901", "902", "903"]
+    features:
+      - multicast
+      - overlay_networks
+      - bgp_evpn
+  
+  # IoT-focused deployment
+  iot_focused:
+    description: "IoT-focused deployment with NAC"
+    active_vrfs: ["902", "903"]  # blue and green for IoT
+    features:
+      - multicast
+      - overlay_networks
+      - bgp_evpn
+      - network_access_control
+  
+  # Multi-cluster deployment
+  multi_cluster:
+    description: "Multi-cluster deployment with IPSec"
+    active_vrfs: ["901", "902", "903"]
+    features:
+      - multicast
+      - overlay_networks
+      - bgp_evpn
+      - ipsec
+      - l3_external
