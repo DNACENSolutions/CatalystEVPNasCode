@@ -14,11 +14,12 @@
 # 9. Validation
 
 - name: "BGP EVPN Fabric Deployment - Complete Workflow"
-  hosts: catalyst_center
+  hosts: catalyst_center_hosts
   connection: local
   gather_facts: false
-  #vars_files:
-  #  - ../data/bgp_evpn_site_01.yml
+  vars_files:
+    - ../data/bgp_evpn_rev2_templates_cluster187.yaml
+    - ../data/bgp_evpn_site_01.yml
   
   tasks:
     - name: "Display deployment banner"
@@ -102,25 +103,31 @@
       tags: 
       - provision
       - validate
-
-    # Phase 10: Template Creation
-    - name: "Phase 10: Create EVPN Templates"
+    # Phase 10: Tags Creation
+    - name: "Phase 10: Create Tags"
+      include_role:
+        name: catalyst_center_tags_manager
+      tags: 
+      - tags
+      - validate
+    # Phase 11: Template Creation
+    - name: "Phase 11: Create EVPN Templates"
       include_role:
         name: catalyst_center_device_templates
       tags: 
       - templates
       - validate
 
-    # # Phase 11: Template Deployment
-    # - name: "Phase 11: Deploy Templates to Devices"
-    #   include_role:
-    #     name: catalyst_center_device_templates
+    # # Phase 12: Template Deployment
+    - name: "Phase 12: Deploy Templates to Devices"
+      include_role:
+        name: catalyst_center_device_templates
     #   tags: 
     #   - deploy
     #   - validate
 
-    # # Phase 12: Validation
-    # - name: "Phase 12: Validate EVPN Underlay and Overlay"
+    # # Phase 13: Validation
+    # - name: "Phase 13: Validate EVPN Underlay and Overlay"
     #   include_role:
     #     name: catalyst_center_evpn_validation
     #   tags: 

@@ -86,12 +86,12 @@ show_help() {
     echo "  phase4              Execute Phase 4: Network Settings"
     echo "  phase5              Execute Phase 5: IP Pools"
     echo "  phase6              Execute Phase 6: Device Discovery"
-    echo "  phase7              Execute Phase 7: Site Assignment"
-    echo "  phase8              Execute Phase 8: LAN Automation"
+    echo "  phase7              Execute Phase 7: Site Assignment (commented out)"
+    echo "  phase8              Execute Phase 8: LAN Automation (commented out)"
     echo "  phase9              Execute Phase 9: Device Provisioning"
-    echo "  phase10             Execute Phase 10: Template Creation"
-    echo "  phase11             Execute Phase 11: Template Deployment"
-    echo "  phase12             Execute Phase 12: Validation"
+    echo "  phase10             Execute Phase 10: Tags Creation"
+    echo "  phase11             Execute Phase 11: Template Creation"
+    echo "  phase12             Execute Phase 12: Template Deployment"
     echo "  validate            Run validation only"
     echo "  check               Check prerequisites and syntax"
     echo "  help                Show this help message"
@@ -139,67 +139,71 @@ case "$1" in
     "phase1")
         check_prerequisites
         validate_syntax
-        execute_phase "1" "Phase 1: ISE Integration" "phase1,ise"
+        execute_phase "1" "Phase 1: ISE Integration" "ise"
         ;;
     "phase2")
         check_prerequisites
         validate_syntax
-        execute_phase "2" "Phase 2: Site Hierarchy Design" "phase2,sites"
+        execute_phase "2" "Phase 2: Site Hierarchy Design" "sites"
         ;;
     "phase3")
         check_prerequisites
         validate_syntax
-        execute_phase "3" "Phase 3: Global Credentials" "phase3,credentials"
+        execute_phase "3" "Phase 3: Global Credentials" "credentials"
         ;;
     "phase4")
         check_prerequisites
         validate_syntax
-        execute_phase "4" "Phase 4: Network Settings" "phase4,network"
+        execute_phase "4" "Phase 4: Network Settings" "network"
         ;;
     "phase5")
         check_prerequisites
         validate_syntax
-        execute_phase "5" "Phase 5: IP Pools" "phase5,pools"
+        execute_phase "5" "Phase 5: IP Pools" "ippools"
         ;;
     "phase6")
         check_prerequisites
         validate_syntax
-        execute_phase "6" "Phase 6: Device Discovery" "phase6,discovery"
+        execute_phase "6" "Phase 6: Device Discovery" "discovery"
         ;;
     "phase7")
         check_prerequisites
         validate_syntax
-        execute_phase "7" "Phase 7: Site Assignment" "phase7,assignment"
+        print_warning "Phase 7: Site Assignment is currently commented out in the playbook"
+        exit 0
         ;;
     "phase8")
         check_prerequisites
         validate_syntax
-        execute_phase "8" "Phase 8: LAN Automation" "phase8,lan_automation"
+        print_warning "Phase 8: LAN Automation is currently commented out in the playbook"
+        exit 0
         ;;
     "phase9")
         check_prerequisites
         validate_syntax
-        execute_phase "9" "Phase 9: Device Provisioning" "phase9,provision"
+        execute_phase "9" "Phase 9: Device Provisioning" "provision"
         ;;
     "phase10")
         check_prerequisites
         validate_syntax
-        execute_phase "10" "Phase 10: Template Creation" "phase10,templates"
+        execute_phase "10" "Phase 10: Tags Creation" "tags"
         ;;
     "phase11")
         check_prerequisites
         validate_syntax
-        execute_phase "11" "Phase 11: Template Deployment" "phase11,template_deploy"
+        execute_phase "11" "Phase 11: Template Creation" "templates"
         ;;
     "phase12")
         check_prerequisites
         validate_syntax
-        execute_phase "12" "Phase 12: Validation" "phase12,validate"
+        print_status "Deploying templates to devices..."
+        ansible-playbook "$SCRIPT_DIR/playbooks/evpn_deployment.yml" --tags "templates" --skip-tags "validate" -vvvv
+        print_success "Phase 12: Template Deployment completed"
         ;;
     "validate")
         check_prerequisites
         validate_syntax
-        execute_phase "validation" "EVPN Fabric Validation" "phase12,validate"
+        execute_phase "validation" "EVPN Fabric Validation" "validate"
         ;;
     "check")
         check_prerequisites
