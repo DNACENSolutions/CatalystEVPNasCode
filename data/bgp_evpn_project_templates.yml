@@ -76,6 +76,19 @@ template_details:
           {'id':'903','name':'green', 'mdt_default':'239.190.0.3', 'mdt_data':'239.190.3.0'}
           ]
         %}
+
+        {# VRF TO NODE MAPPINGS #}
+        {# NOT ALL VRF AND VNI NEED TO BE INSTANTIATED ON ALL THE NODES IN FABRIC #}
+        {% set DEFN_VRF_TO_NODE = {
+          'spine01.dcloud.cisco.com':  ['901'],
+          'spine02.dcloud.cisco.com':  ['901'],
+          'leaf01.dcloud.cisco.com':   ['901','902','903'],
+          'leaf02.dcloud.cisco.com':   ['901','902','903'],
+          'leaf03.dcloud.cisco.com':   ['901','902','903'],
+          'border01.dcloud.cisco.com': ['902','903'],
+          'border02.dcloud.cisco.com': ['902','903']
+        } %}
+        {# End of File #}
         {% endraw %}
       version: "1.0"
 
@@ -96,12 +109,23 @@ template_details:
       software_version: null
       template_content: |
         {% raw %}
-        {% set DEFN_NODE_ROLES = {
-          'SPINE': ['kinstone-spine1.dcloud.cisco.com', 'halifax-spine2.dcloud.cisco.com'],
-          'RR': ['kinstone-spine1.dcloud.cisco.com', 'halifax-spine2.dcloud.cisco.com'],
-          'CLIENT': ['apex-leaf1.dcloud.cisco.com', 'cary-leaf2.dcloud.cisco.com', 'lagrange-leaf3.dcloud.cisco.com', 'carolinas37-border1.dcloud.cisco.com', 'carolinas50-border2.dcloud.cisco.com'],
-          'BORDER': ['carolinas37-border1.dcloud.cisco.com', 'carolinas50-border2.dcloud.cisco.com']
-        } %}
+        {% set DEFN_NODE_ROLES =
+          {
+          'SPINE':  ['spine01.dcloud.cisco.com',
+                    'spine02.dcloud.cisco.com'],
+          'RR':     ['spine01.dcloud.cisco.com',
+                    'spine02.dcloud.cisco.com'],
+          'CLIENT': ['leaf01.dcloud.cisco.com',
+                    'leaf02.dcloud.cisco.com',
+                    'leaf03.dcloud.cisco.com',
+                    'border01.dcloud.cisco.com',
+                    'border02.dcloud.cisco.com'],
+          'BORDER': ['border01.dcloud.cisco.com',
+                    'border02.dcloud.cisco.com']
+          }
+        %}
+
+        {# End of File #}
         {% endraw %}
       version: "1.0"
 
@@ -122,26 +146,52 @@ template_details:
       software_version: null
       template_content: |
         {% raw %}
-        {% set DEFN_LOOP_UNDERLAY = {
-          'kinstone-spine1.dcloud.cisco.com': '172.16.255.1',
-          'halifax-spine2.dcloud.cisco.com': '172.16.255.2',
-          'apex-leaf1.dcloud.cisco.com': '172.16.255.3',
-          'cary-leaf2.dcloud.cisco.com': '172.16.255.4',
-          'lagrange-leaf3.dcloud.cisco.com': '172.16.255.5',
-          'carolinas37-border1.dcloud.cisco.com': '172.16.255.6',
-          'carolinas50-border2.dcloud.cisco.com': '172.16.255.7'
-        } %}
-        
-        {% set DEFN_LOOP_OVERLAY = {
-          'red': '10.1.91.',
-          'blue': '10.1.92.',
-          'green': '10.1.93.'
-        } %}
-        
-        {% set DEFN_LOOP_NAME = {
-          'UNDERLAY': 'Loopback0',
-          'ANYCAST': 'Loopback2'
-        } %}
+        {% set DEFN_LOOP_UNDERLAY =
+            {
+              'spine01.dcloud.cisco.com':   '172.16.255.1',
+              'spine02.dcloud.cisco.com':   '172.16.255.2',
+              'leaf01.dcloud.cisco.com':    '172.16.255.3',
+              'leaf02.dcloud.cisco.com':    '172.16.255.4',
+              'leaf03.dcloud.cisco.com':    '172.16.255.5',
+              'border01.dcloud.cisco.com':  '172.16.255.6',
+              'border02.dcloud.cisco.com':  '172.16.255.7'
+            }
+        %}
+
+        {% set DEFN_LOOP_IPSEC =
+            {
+              'border01.dcloud.cisco.com':  '172.16.255.60',
+              'border02.dcloud.cisco.com':  '172.16.255.70',
+              'dmz01.dcloud.cisco.com':     '172.16.255.201'
+            }
+        %}
+
+        {% set DEFN_LOOP_MCLUSTER =
+            {
+              'border01.dcloud.cisco.com':  '172.16.255.66',
+              'border02.dcloud.cisco.com':  '172.16.255.77',
+              'dmz01.dcloud.cisco.com':     '172.16.255.210'
+            }
+        %}
+
+        {% set DEFN_LOOP_OVERLAY =
+            {
+              'red':                                    '10.1.91.',
+              'blue':                                   '10.1.92.',
+              'green':                                  '10.1.93.'
+            }
+        %}
+
+        {% set DEFN_LOOP_NAME =
+            {
+                'UNDERLAY': 'Loopback0',
+                'ANYCAST':  'Loopback2',
+                'IPSEC':    'Loopback1',
+                'MCLUSTER': 'Loopback2'
+            }
+        %}
+
+        {# End of File #}
         {% endraw %}
       version: "1.0"
 
@@ -168,21 +218,21 @@ template_details:
       software_version: null
       template_content: |
         {% raw %}
-        {% include "EVPN/DEFN-VRF" %}
-        {% include "EVPN/DEFN-ROLES" %}
-        {% include "EVPN/DEFN-LOOPBACKS" %}
-        
+        {#BOOTSTRAP FOR SIMULATION#}
+        {# Expect these to define DEFN_VRF, vrf_definition(), DEFN_LOOP_UNDERLAY, etc. #}
+        {# {% include "BGP_EVPN_rev2/DEFN-VRF.j2" %} #}
+        {# {% include "BGP_EVPN_rev2/FUNC-OBJECT-MACROS.j2" %} #}
+        {# {% include "BGP_EVPN_rev2/DEFN-LOOPBACKS.j2" %} #}
+
+        {# Build VRF CLI for the current device #}
+        {% macro vrfDefinitionBuild(DEFN_VRF, DEFN_VRF_TO_NODE, DEVICE_HOSTNAME, DEFN_LOOP_UNDERLAY, FABRIC_BGP_ASN) %}
         {# Resolve the VRF objects upfront #}
         {% set vrf_objs = [] %}
-        {% for input_vrf in vrf_list %}
-          {% set _vrf = (DEFN_VRF | selectattr("name", "equalto", input_vrf) | list | first) %}
-          {% if _vrf %}{% do vrf_objs.append(_vrf | first) %}{% endif %}
-        {% endfor %}
-        
+        {{ vrf_definition(DEFN_VRF, DEFN_VRF_TO_NODE, DEVICE_HOSTNAME) }}
         {% for vrf in vrf_objs %}
         vrf definition {{ vrf.name }}
         description VRF {{ vrf.name }} definition
-        rd {{ DEFN_LOOP_UNDERLAY[__device.hostname] }}:{{ vrf.id }}
+        rd {{ DEFN_LOOP_UNDERLAY[DEVICE_HOSTNAME] }}:{{ vrf.id }}
         !
         address-family ipv4
         route-target export {{ FABRIC_BGP_ASN }}:{{ vrf.id }}
@@ -192,6 +242,13 @@ template_details:
         exit-address-family
         !
         {% endfor %}
+        {% endmacro %}
+
+        {# Call for current device #}
+        {#{% set HOST = __device.hostname | default('', true) %}#}
+        {#{{ vrfDefinitionBuild(DEFN_VRF, DEFN_VRF_TO_NODE, HOST, DEFN_LOOP_UNDERLAY, FABRIC_BGP_ASN) }}#}
+
+        {# End of File #}
         {% endraw %}
       template_params:
         - parameter_name: vrf_list
@@ -200,12 +257,6 @@ template_details:
           description: "List of VRF names to configure"
           required: false
           param_array: true
-          selection:
-            selection_type: MULTI_SELECT
-            selection_values:
-              "901": "red"
-              "902": "green"
-              "903": "blue"
         - parameter_name: FABRIC_BGP_ASN
           data_type: INTEGER
           default_value: 65001
@@ -243,38 +294,54 @@ template_details:
       software_version: null
       template_content: |
         {% raw %}
-        {% if vlan_id is not defined %}
-        {% set blah = "EVPN" + "/DEFN-VRF" %}
-        {% endif %}
-        
-        {% include "EVPN/DEFN-ROLES" %}
-        {% include "EVPN/DEFN-LOOPBACKS" %}
-        
+        {#BOOTSTRAP FOR SIMULATION#}
+        {# {% include "BGP_EVPN_rev2/DEFN-VRF.j2" %} #}
+        {# {% include "BGP_EVPN_rev2/FUNC-OBJECT-MACROS.j2" %} #}
+        {# {% include "BGP_EVPN_rev2/DEFN-ROLES.j2" %} #}
+        {# {% include "BGP_EVPN_rev2/DEFN-LOOPBACKS.j2" %} #}
+        {# {% include "BGP_EVPN_rev2/DEFN-OVERLAY.j2" %} #}
+
+        {% macro interfaceLoopbackBuild(DEFN_VRF, DEFN_VRF_TO_NODE, DEVICE_HOSTNAME, DEFN_LOOP_NAME, DEFN_LOOP_UNDERLAY, DEFN_NODE_ROLES, DEFN_LOOP_IPSEC, FABRIC_UNDERLAY, DEFN_LOOP_MCLUSTER) %}
+        {# Resolve the VRF objects upfront #}
+        {% set vrf_objs = [] %}
+        {{ vrf_definition(DEFN_VRF, DEFN_VRF_TO_NODE, DEVICE_HOSTNAME) }}
+
+        ! *** FABRIC-LOOPBACKS FOR {{DEVICE_HOSTNAME}}
         {# UNDERLAY LOOPBACKS #}
         interface {{DEFN_LOOP_NAME['UNDERLAY']}}
         description UNDERLAY-NVE-INTERFACE
-        ip address {{DEFN_LOOP_UNDERLAY[__device.hostname]}} 255.255.255.255
+        ip address {{DEFN_LOOP_UNDERLAY[DEVICE_HOSTNAME]}} 255.255.255.255
         ip pim sparse-mode
         !
-        {% if __device.hostname in DEFN_NODE_ROLES['SPINE'] or __device.hostname in DEFN_NODE_ROLES['BORDER'] %}
-        {# SKIP #}
+        {% if DEVICE_HOSTNAME in DEFN_NODE_ROLES['SPINE']  %}
+        {# SKIP SPINE #}
+        {% elif DEVICE_HOSTNAME in DEFN_NODE_ROLES['BORDER'] %}
+        interface {{DEFN_LOOP_NAME['IPSEC']}}
+        description IPSEC TUNNEL SOURCE INTERFACE
+        ip address {{DEFN_LOOP_IPSEC[DEVICE_HOSTNAME]}} 255.255.255.255
+        ip ospf {{FABRIC_UNDERLAY['instance_id']}} area {{FABRIC_UNDERLAY['area']}}
+        !
+        interface {{DEFN_LOOP_NAME['MCLUSTER']}}
+        description NVE MULTICLUSTER INTERFACE
+        ip address {{DEFN_LOOP_MCLUSTER[DEVICE_HOSTNAME]}} 255.255.255.255
+        !
         {% else %}
-            {% for input_vrf in vrf_list %}
-            {% for vrf in DEFN_VRF %}
-            {% if vrf.name == input_vrf %}
-                {% set ip = DEFN_LOOP_UNDERLAY[__device.hostname] %}
-                {% set split_ip = ip.split('\\.') %}
-                {% set last_octet = split_ip[3] %}
-                interface Loopback{{vrf.id}}
-                description OVERLAY-VRF-{{vrf.name}}
-                vrf forwarding {{vrf.name}}
-                ip address {{DEFN_LOOP_OVERLAY[vrf.name]}}{{last_octet}} 255.255.255.255
-                ip pim sparse-mode
-                !
-            {% endif %}
-            {% endfor %}
-            {% endfor %}
+        {% for input_vrf in vrf_objs %}
+        {% set ip = DEFN_LOOP_UNDERLAY[DEVICE_HOSTNAME] %}
+        {% set split_ip = ip.split('\\.') %}
+        {% set last_octet = split_ip[3] %}
+        interface Loopback{{input_vrf.id}}
+        description OVERLAY-VRF-{{input_vrf.name}}
+        vrf forwarding {{input_vrf.name}}
+        ip address {{DEFN_LOOP_OVERLAY[input_vrf.name]}}{{last_octet}} 255.255.255.255
+        ip pim sparse-mode
+        !
+        {% endfor %}
         {% endif %}
+
+        {% endmacro %}
+
+        {# End of File #}
         {% endraw %}
       template_params:
         - parameter_name: vrf_list

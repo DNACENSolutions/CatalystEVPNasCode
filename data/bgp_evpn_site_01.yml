@@ -193,3 +193,39 @@ device_credentials:
       site_name:
         - Global/USA/SAN JOSE
         - Global/USA/SAN-FRANCISCO
+tags_details:
+  - tag:
+      name: Server_Connected_Devices_and_Ports
+      description: "Tag for devices and interfaces
+        connected to servers"
+  - tag:
+      name: "BORDER LEAF"
+      description: "BGP EVPN Template Tags: Border Leaf"
+  - tag:
+      name: "LEAF"
+      description: "BGP EVPN Template Tags: Leaf"
+  - tag:
+      name: "SPINE"
+      description: "BGP EVPN Template Tags: Spine"
+  - tag_memberships:
+      tags:
+        - BORDER LEAF
+      device_details:
+        - hostnames:
+            - TB16-SJ-BORDER-1.solutionsanity.com
+            - TB16-SJ-BORDER-2.solutionsanity.com
+  - tag_memberships:
+      tags:
+        - LEAF
+      device_details:
+        - hostnames:
+            - TB16-SJ-Leaf-1.solutionsanity.com
+            - TB16-SJ-Leaf-2.solutionsanity.com
+            - TB16-SJ-Leaf-3.solutionsanity.com
+  - tag_memberships:
+      tags:
+        - SPINE
+      device_details:
+        - hostnames:
+            - TB16-Spine.solutionsanity.com
+            - TB16-SJ-Border-3.solutionsanity.com

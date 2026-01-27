@@ -1,0 +1,878 @@
+# Select Catalyst Center version
+catalyst_center_version: 2.3.7.9
+
+# BGP EVPN Project Templates Configuration for Cluster 187
+# Site: SJC (San Jose Campus)
+# Based on templates from EVPN_Cluster187_site_SJC_cluster_187
+# 
+# This file contains all the BGP EVPN VXLAN Campus Fabric templates for Cluster 187:
+# 
+# Definition Templates (DEFN-*):
+#   - DEFN-MCAST: Multicast definitions for EVPN fabric
+#   - DEFN-VRF: VRF definitions for multi-tenancy (red, blue, green)
+#   - DEFN-ROLES: Device role definitions (spine/leaf/border nodes)
+#   - DEFN-LOOPBACKS: Loopback interface definitions for underlay/overlay
+#   - DEFN-VNIOFFSETS: VNI offset definitions for L2 and L3 VNIs
+#   - DEFN-OVERLAY: Overlay network definitions with VLANs and SVIs
+#   - DEFN-L3OUT: Layer 3 external connectivity definitions
+#   - DEFN-NAC-IOT: NAC IoT definitions
+#   - DEFN-IPSEC: IPSec tunnel definitions for multi-cluster
+#
+# Fabric Templates (FABRIC-*):
+#   - 1. FABRIC-VRF: VRF configuration for multi-tenancy
+#   - 2. FABRIC-LOOPBACKS: Loopback interface configuration
+#   - 3. FABRIC-NVE: Network Virtualization Edge (NVE) interface configuration
+#   - 4. FABRIC-MCAST: Multicast configuration for BUM traffic
+#   - 5. FABRIC-EVPN: BGP EVPN control plane configuration
+#   - 6. FABRIC-OVERLAY: VXLAN overlay network services
+#   - 7. FABRIC-IPSEC: IPSec tunnel configuration
+#   - 8. FABRIC-NAC-IOT: Network Access Control for IoT
+#
+# Composite Template:
+#   - 0. BGP-EVPN-BUILD: Complete BGP EVPN fabric configuration (combines all templates)
+#
+# Usage: Deploy these templates to Catalyst Center using the device_templates role
+template_details:
+  # ============================================================================
+  # DEFINITION TEMPLATES
+  # ============================================================================
+  - configuration_templates:
+      author: admin
+      composite: false
+      custom_params_order: false
+      template_description: "Multicast definitions for EVPN fabric - Cluster 187"
+      device_types:
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9500 Series Switches
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9000 Series Virtual Switches
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9300 Series Switches
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9400 Series Switches
+      failure_policy: ABORT_TARGET_ON_ERROR
+      language: JINJA
+      template_name: DEFN-MCAST
+      project_name: EVPN_Cluster187
+      project_description: "BGP EVPN VXLAN Campus Fabric Templates - Cluster 187 SJC"
+      software_type: IOS-XE
+      software_version: null
+      template_content: |
+        {% raw %}
+        {% set FABRIC_RP_ADDR  = '204.192.3.41' %}
+        {% set FABRIC_RP_SCOPES = ['239.190.0.0 0.0.255.255'] %}
+        
+        {% set ENTERPRISE_RP_ADDR  = '204.192.3.40' %}
+        {% set ENTERPRISE_RP_SCOPES = ['238.190.0.0 0.0.255.255'] %}
+        
+        {# End of File #}
+        {% endraw %}
+      version: "1.0"
+
+  - configuration_templates:
+      author: admin
+      composite: false
+      custom_params_order: false
+      template_description: "VRF definitions for multi-tenancy - Cluster 187"
+      device_types:
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9500 Series Switches
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9000 Series Virtual Switches
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9300 Series Switches
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9400 Series Switches
+      failure_policy: ABORT_TARGET_ON_ERROR
+      language: JINJA
+      template_name: DEFN-VRF
+      project_name: EVPN_Cluster187
+      project_description: "BGP EVPN VXLAN Campus Fabric Templates - Cluster 187 SJC"
+      software_type: IOS-XE
+      software_version: null
+      template_content: |
+        {% raw %}
+        {# NAMING CONVENTION#}
+        {#MDT DEFAULT: 239.190.1XX.1#}
+        {#MDT DATA:    239.190. XX.1#}
+        {% set DEFN_VRF = [
+          {'id':'901','name':'red', 'mdt_default':'239.190.0.1', 'mdt_data':'239.190.1.0'},
+          {'id':'902','name':'blue', 'mdt_default':'239.190.0.2', 'mdt_data':'239.190.2.0'},
+          {'id':'903','name':'green', 'mdt_default':'239.190.0.3', 'mdt_data':'239.190.3.0'}
+          ]
+        %}
+        
+        {# VRF TO NODE MAPPINGS #}
+        {# NOT ALL VRF AND VNI NEED TO BE INSTANTIATED ON ALL THE NODES IN FABRIC #}
+        {% set DEFN_VRF_TO_NODE = {
+          'TB16-Spine.solutionsanity.com':  ['901'],
+          'TB16-SJ-Border-3.solutionsanity.com':  ['901'],
+          'TB16-SJ-Leaf-1.solutionsanity.com':   ['901','902','903'],
+          'TB16-SJ-Leaf-2.solutionsanity.com':   ['901','902','903'],
+          'TB16-SJ-Leaf-3.solutionsanity.com':   ['901','902','903'],
+          'TB16-SJ-BORDER-1.solutionsanity.com': ['902','903'],
+          'TB16-SJ-BORDER-2.solutionsanity.com': ['902','903']
+        } %}
+        
+        {# End of File #}
+        {% endraw %}
+      version: "1.0"
+
+  - configuration_templates:
+      author: admin
+      composite: false
+      custom_params_order: false
+      template_description: "Device role definitions for spine/leaf/border nodes - Cluster 187"
+      device_types:
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9500 Series Switches
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9000 Series Virtual Switches
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9300 Series Switches
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9400 Series Switches
+      failure_policy: ABORT_TARGET_ON_ERROR
+      language: JINJA
+      template_name: DEFN-ROLES
+      project_name: EVPN_Cluster187
+      project_description: "BGP EVPN VXLAN Campus Fabric Templates - Cluster 187 SJC"
+      software_type: IOS-XE
+      software_version: null
+      template_content: |
+        {% raw %}
+        {% set DEFN_NODE_ROLES =
+          {
+          'SPINE':  ['TB16-Spine.solutionsanity.com',
+                     'TB16-SJ-Border-3.solutionsanity.com'],
+          'RR':     ['TB16-Spine.solutionsanity.com',
+                     'TB16-SJ-Border-3.solutionsanity.com'],
+          'CLIENT': ['TB16-SJ-Leaf-1.solutionsanity.com',
+                     'TB16-SJ-Leaf-2.solutionsanity.com',
+                     'TB16-SJ-Leaf-3.solutionsanity.com',
+                     'TB16-SJ-BORDER-1.solutionsanity.com',
+                     'TB16-SJ-BORDER-2.solutionsanity.com'],
+          'BORDER': ['TB16-SJ-BORDER-1.solutionsanity.com',
+                     'TB16-SJ-BORDER-2.solutionsanity.com']
+          }
+        %}
+        
+        {# End of File #}
+        {% endraw %}
+      version: "1.0"
+
+  - configuration_templates:
+      author: admin
+      composite: false
+      custom_params_order: false
+      template_description: "Loopback interface definitions - Cluster 187"
+      device_types:
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9500 Series Switches
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9000 Series Virtual Switches
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9300 Series Switches
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9400 Series Switches
+      failure_policy: ABORT_TARGET_ON_ERROR
+      language: JINJA
+      template_name: DEFN-LOOPBACKS
+      project_name: EVPN_Cluster187
+      project_description: "BGP EVPN VXLAN Campus Fabric Templates - Cluster 187 SJC"
+      software_type: IOS-XE
+      software_version: null
+      template_content: |
+        {% raw %}
+        {% set DEFN_LOOP_UNDERLAY =
+            {
+              'TB16-SJ-BORDER-1.solutionsanity.com': '204.1.2.5',
+              'TB16-SJ-BORDER-2.solutionsanity.com': '204.1.2.6',
+              'TB16-Spine.solutionsanity.com': '204.1.1.4',
+              'TB16-SJ-Border-3.solutionsanity.com': '204.1.1.11',
+              'TB16-SJ-Leaf-1.solutionsanity.com': '204.1.1.5',
+              'TB16-SJ-Leaf-2.solutionsanity.com': '204.1.1.10',
+              'TB16-SJ-Leaf-3.solutionsanity.com': '204.1.1.22'
+            }
+        %}
+        
+        {% set DEFN_LOOP_IPSEC =
+            {
+              'TB16-SJ-BORDER-1.solutionsanity.com':  '204.1.2.60',
+              'TB16-SJ-BORDER-2.solutionsanity.com':  '204.1.2.70',
+              'TB16-NY-Border.solutionsanity.com':     '204.1.2.201'
+            }
+        %}
+        
+        {% set DEFN_LOOP_MCLUSTER =
+            {
+              'TB16-SJ-BORDER-1.solutionsanity.com':  '204.1.2.66',
+              'TB16-SJ-BORDER-2.solutionsanity.com':  '204.1.2.77',
+              'TB16-NY-Border.solutionsanity.com':     '204.1.2.210'
+            }
+        %}
+        
+        {% set DEFN_LOOP_OVERLAY =
+            {
+              'red':                                    '10.1.91.',
+              'blue':                                   '10.1.92.',
+              'green':                                  '10.1.93.'
+            }
+        %}
+        
+        {% set DEFN_LOOP_NAME =
+            {
+                'UNDERLAY': 'Loopback0',
+                'ANYCAST':  'Loopback2',
+                'IPSEC':    'Loopback1',
+                'MCLUSTER': 'Loopback2'
+            }
+        %}
+        
+        {# End of File #}
+        {% endraw %}
+      version: "1.0"
+
+  - configuration_templates:
+      author: admin
+      composite: false
+      custom_params_order: false
+      template_description: "VNI offset definitions - Cluster 187"
+      device_types:
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9500 Series Switches
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9000 Series Virtual Switches
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9300 Series Switches
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9400 Series Switches
+      failure_policy: ABORT_TARGET_ON_ERROR
+      language: JINJA
+      template_name: DEFN-VNIOFFSETS
+      project_name: EVPN_Cluster187
+      project_description: "BGP EVPN VXLAN Campus Fabric Templates - Cluster 187 SJC"
+      software_type: IOS-XE
+      software_version: null
+      template_content: |
+        {% raw %}
+        {# NAMING CONVENTIONS   #}
+        {# L3VNI {{L3VNIOFFSET}}{{ VRF ID }} #}
+        {# L3VNI 50XXX #}
+        {# L2VNI {{L2VNIOFFSET}}+{{ VLAN ID }} #}
+        {# L2VNI 10XXX #}
+        
+        {% set L2VNIOFFSET = 10000 %}
+        {% set L3VNIOFFSET = 50 %}
+        
+        {# End of File #}
+        {% endraw %}
+      version: "1.0"
+
+  - configuration_templates:
+      author: admin
+      composite: false
+      custom_params_order: false
+      template_description: "Overlay network definitions - Cluster 187"
+      device_types:
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9500 Series Switches
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9000 Series Virtual Switches
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9300 Series Switches
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9400 Series Switches
+      failure_policy: ABORT_TARGET_ON_ERROR
+      language: JINJA
+      template_name: DEFN-OVERLAY
+      project_name: EVPN_Cluster187
+      project_description: "BGP EVPN VXLAN Campus Fabric Templates - Cluster 187 SJC"
+      software_type: IOS-XE
+      software_version: null
+      template_content: |
+        {% raw %}
+        {% set FABRIC_BGP_ASN = '65001' %}
+        {% set FABRIC_UNDERLAY = {'proto':'ospf', 'instance_id':'1', 'area':'0'} %}
+        {% set FABRIC_IPSEC_UNDERLAY = {'proto':'ospf', 'instance_id':'100', 'area':'0'} %}
+        
+        {% set DEFN_OVERLAY = [
+          {
+            'vrf': 'red',
+            'vlans': {
+              '101': {'name':'corp-101', 'ipaddr':'10.1.11.1 255.255.255.0', 'mac':'0000.0901.0101', 'dhcp_helper':'204.192.3.40', 'bum_addr':'239.190.100.101'},
+              '201': {'name':'corp-201', 'ipaddr':'10.2.22.1 255.255.255.0', 'mac':'0000.0901.0201', 'dhcp_helper':'204.192.3.40', 'bum_addr':'239.190.100.201'}
+            }
+          },
+          {
+            'vrf': 'blue',
+            'vlans': {
+              '401': {'name':'iot-blue-401', 'ipaddr': '198.18.10.1 255.255.255.0', 'mac':'0000.0902.0401', 'dhcp_helper':'204.192.3.40', 'bum_addr':'239.190.100.41'}
+            }
+          },
+          {
+            'vrf': 'green',
+            'vlans': {
+              '501': {'name':'iot-green-501', 'ipaddr': '198.18.11.1 255.255.255.0', 'mac':'0000.0903.0501', 'dhcp_helper':'204.192.3.40', 'bum_addr':'239.190.100.51'}
+            }
+          }
+        ] %}
+        
+        {# End of File #}
+        {% endraw %}
+      version: "1.0"
+
+  - configuration_templates:
+      author: admin
+      composite: false
+      custom_params_order: false
+      template_description: "Layer 3 external connectivity definitions - Cluster 187"
+      device_types:
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9500 Series Switches
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9000 Series Virtual Switches
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9300 Series Switches
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9400 Series Switches
+      failure_policy: ABORT_TARGET_ON_ERROR
+      language: JINJA
+      template_name: DEFN-L3OUT
+      project_name: EVPN_Cluster187
+      project_description: "BGP EVPN VXLAN Campus Fabric Templates - Cluster 187 SJC"
+      software_type: IOS-XE
+      software_version: null
+      template_content: |
+        {% raw %}
+        {% set DEFN_L3OUT = [
+          {
+            'vrf': 'red',
+            'node': 'TB16-Spine.solutionsanity.com',
+            'neighbour_asn': '65002',
+            'interfaces': {
+              'GigabitEthernet1/0/7.2': {'name': 'uplink1', 'vlan': '2', 'ipaddr': '10.255.255.1 255.255.255.252', 'neighbour': '10.255.255.2'},
+              'GigabitEthernet1/0/8.2': {'name': 'uplink2', 'vlan': '2', 'ipaddr': '10.255.255.5 255.255.255.252', 'neighbour': '10.255.255.6'}
+            }
+          },
+          {
+            'vrf': 'red',
+            'node': 'TB16-SJ-Border-3.solutionsanity.com',
+            'neighbour_asn': '65002',
+            'interfaces': {
+              'GigabitEthernet1/0/7.2': {'name': 'uplink1', 'vlan': '2', 'ipaddr': '10.255.255.13 255.255.255.252', 'neighbour': '10.255.255.14'},
+              'GigabitEthernet1/0/8.2': {'name': 'uplink2', 'vlan': '2', 'ipaddr': '10.255.255.9 255.255.255.252', 'neighbour': '10.255.255.10'}
+            }
+          }
+        ] %}
+        
+        {% set DEFN_L3OUT_AGGREGATES = ["10.1.11.0 255.255.255.0",
+                                        "10.2.22.0 255.255.255.0"]
+        %}
+        
+        {# End of File #}
+        {% endraw %}
+      version: "1.0"
+
+  - configuration_templates:
+      author: admin
+      composite: false
+      custom_params_order: false
+      template_description: "NAC IoT definitions - Cluster 187"
+      device_types:
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9500 Series Switches
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9000 Series Virtual Switches
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9300 Series Switches
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9400 Series Switches
+      failure_policy: ABORT_TARGET_ON_ERROR
+      language: JINJA
+      template_name: DEFN-NAC-IOT
+      project_name: EVPN_Cluster187
+      project_description: "BGP EVPN VXLAN Campus Fabric Templates - Cluster 187 SJC"
+      software_type: IOS-XE
+      software_version: null
+      template_content: |
+        {% raw %}
+        {% set DEFN_NAC_IOT = [
+          {'vrf':'blue', 'nac_ip':'198.18.7.254', 'nac_key':'C!sco123'}
+          ]
+        %}
+        
+        {# End of File #}
+        {% endraw %}
+      version: "1.0"
+
+  - configuration_templates:
+      author: admin
+      composite: false
+      custom_params_order: false
+      template_description: "IPSec tunnel definitions for multi-cluster - Cluster 187"
+      device_types:
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9500 Series Switches
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9000 Series Virtual Switches
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9300 Series Switches
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9400 Series Switches
+      failure_policy: ABORT_TARGET_ON_ERROR
+      language: JINJA
+      template_name: DEFN-IPSEC
+      project_name: EVPN_Cluster187
+      project_description: "BGP EVPN VXLAN Campus Fabric Templates - Cluster 187 SJC"
+      software_type: IOS-XE
+      software_version: null
+      template_content: |
+        {% raw %}
+        {% set DEFN_IPSEC =
+          {
+            'TB16-NY-Border.solutionsanity.com': [
+            {
+              'tun_ip'      :   '10.100.100.1 255.255.255.252',
+              'peer_ip'     :   '10.100.100.2',
+              'tun_dst'     :   '172.16.255.60',
+              'tun_mode'    :   'gre ip',
+              'peer_bgp_asn':   '65001'
+            },
+            {
+              'tun_ip'      :   '10.100.101.1 255.255.255.252',
+              'peer_ip'     :   '10.100.101.2',
+              'tun_dst'     :   '172.16.255.70',
+              'tun_mode'    :   'gre ip',
+              'peer_bgp_asn':   '65001'
+            }],
+            'TB16-SJ-BORDER-1.solutionsanity.com': [
+            {
+              'tun_ip'      :   '10.100.100.2 255.255.255.252',
+              'peer_ip'     :   '10.100.100.1',
+              'tun_dst'     :   '172.16.255.201',
+              'tun_mode'    :   'gre ip',
+              'peer_bgp_asn':   '65003'
+            }],
+            'TB16-SJ-BORDER-2.solutionsanity.com': [
+            {
+              'tun_ip'      :   '10.100.101.2 255.255.255.252',
+              'peer_ip'     :   '10.100.101.1',
+              'tun_dst'     :   '172.16.255.201',
+              'tun_mode'    :   'gre ip',
+              'peer_bgp_asn':   '65003'
+            }]
+        } %}
+        
+        {# End of File #}
+        {% endraw %}
+      version: "1.0"
+
+  - configuration_templates:
+      author: admin
+      composite: false
+      custom_params_order: false
+      template_description: "Function macros for object resolution - Cluster 187"
+      device_types:
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9500 Series Switches
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9000 Series Virtual Switches
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9300 Series Switches
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9400 Series Switches
+      failure_policy: ABORT_TARGET_ON_ERROR
+      language: JINJA
+      template_name: FUNC-OBJECT-MACROS
+      project_name: EVPN_Cluster187
+      project_description: "BGP EVPN VXLAN Campus Fabric Templates - Cluster 187 SJC"
+      software_type: IOS-XE
+      software_version: null
+      template_content: |
+        {% raw %}
+        {# =================================== #}
+        {# Resolve the VRF objects upfront     #}
+        {# =================================== #}
+        {% macro vrf_definition(DEFN_VRF, DEFN_VRF_TO_NODE, DEVICE_HOSTNAME) %}
+        {% for input_vrf in DEFN_VRF_TO_NODE[DEVICE_HOSTNAME] %}
+          {% set _vrf = (DEFN_VRF | selectattr("id", "equalto", input_vrf) | list | first) %}
+          {% if _vrf %}
+            {% do vrf_objs.append(_vrf | first) %}
+          {% endif %}
+        {% endfor %}
+        {% endmacro %}
+        
+        {# End of File #}
+        {% endraw %}
+      version: "1.0"
+
+  # ============================================================================
+  # FABRIC TEMPLATES
+  # ============================================================================
+
+  - configuration_templates:
+      author: admin
+      composite: false
+      custom_params_order: true
+      template_description: "VRF configuration for multi-tenancy - Cluster 187"
+      device_types:
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9500 Series Switches
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9000 Series Virtual Switches
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9300 Series Switches
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9400 Series Switches
+      failure_policy: ABORT_TARGET_ON_ERROR
+      language: JINJA
+      template_name: "1. FABRIC-VRF"
+      project_name: EVPN_Cluster187
+      project_description: "BGP EVPN VXLAN Campus Fabric Templates - Cluster 187 SJC"
+      software_type: IOS-XE
+      software_version: null
+      template_content: |
+        {% raw %}
+        {#BOOTSTRAP FOR SIMULATION#}
+        {# Expect these to define DEFN_VRF, vrf_definition(), DEFN_LOOP_UNDERLAY, etc. #}
+        {# {% include "EVPN_Cluster187/DEFN-VRF.j2" %} #}
+        {# {% include "EVPN_Cluster187/FUNC-OBJECT-MACROS.j2" %} #}
+        {# {% include "EVPN_Cluster187/DEFN-LOOPBACKS.j2" %} #}
+        
+        {# Build VRF CLI for the current device #}
+        {% macro vrfDefinitionBuild(DEFN_VRF, DEFN_VRF_TO_NODE, DEVICE_HOSTNAME, DEFN_LOOP_UNDERLAY, FABRIC_BGP_ASN) %}
+        {# Resolve the VRF objects upfront #}
+        {% set vrf_objs = [] %}
+        {{ vrf_definition(DEFN_VRF, DEFN_VRF_TO_NODE, DEVICE_HOSTNAME) }}
+        {% for vrf in vrf_objs %}
+        vrf definition {{ vrf.name }}
+        description VRF {{ vrf.name }} definition
+        rd {{ DEFN_LOOP_UNDERLAY[DEVICE_HOSTNAME] }}:{{ vrf.id }}
+        !
+        address-family ipv4
+        route-target export {{ FABRIC_BGP_ASN }}:{{ vrf.id }}
+        route-target import {{ FABRIC_BGP_ASN }}:{{ vrf.id }}
+        route-target export {{ FABRIC_BGP_ASN }}:{{ vrf.id }} stitching
+        route-target import {{ FABRIC_BGP_ASN }}:{{ vrf.id }} stitching
+        exit-address-family
+        !
+        {% endfor %}
+        {% endmacro %}
+        
+        {# Call for current device #}
+        {#{% set HOST = __device.hostname | default('', true) %}#}
+        {#{{ vrfDefinitionBuild(DEFN_VRF, DEFN_VRF_TO_NODE, HOST, DEFN_LOOP_UNDERLAY, FABRIC_BGP_ASN) }}#}
+        
+        {# End of File #}
+        {% endraw %}
+      template_params:
+        - parameter_name: FABRIC_BGP_ASN
+          data_type: INTEGER
+          default_value: "65001"
+          description: "BGP AS number for the fabric"
+          required: true
+          param_array: false
+      version: "1.0"
+
+  - configuration_templates:
+      author: admin
+      composite: false
+      custom_params_order: true
+      template_description: "Loopback interface configuration - Cluster 187"
+      device_types:
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9500 Series Switches
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9000 Series Virtual Switches
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9300 Series Switches
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9400 Series Switches
+      failure_policy: ABORT_TARGET_ON_ERROR
+      language: JINJA
+      template_name: "2. FABRIC-LOOPBACKS"
+      project_name: EVPN_Cluster187
+      project_description: "BGP EVPN VXLAN Campus Fabric Templates - Cluster 187 SJC"
+      software_type: IOS-XE
+      software_version: null
+      template_content: |
+        {% raw %}
+        {#BOOTSTRAP FOR SIMULATION#}
+        {# {% include "EVPN_Cluster187/DEFN-VRF.j2" %} #}
+        {# {% include "EVPN_Cluster187/FUNC-OBJECT-MACROS.j2" %} #}
+        {# {% include "EVPN_Cluster187/DEFN-ROLES.j2" %} #}
+        {# {% include "EVPN_Cluster187/DEFN-LOOPBACKS.j2" %} #}
+        {# {% include "EVPN_Cluster187/DEFN-OVERLAY.j2" %} #}
+        
+        {% macro interfaceLoopbackBuild(DEFN_VRF, DEFN_VRF_TO_NODE, DEVICE_HOSTNAME, DEFN_LOOP_NAME, DEFN_LOOP_UNDERLAY, DEFN_NODE_ROLES, DEFN_LOOP_IPSEC, FABRIC_UNDERLAY, DEFN_LOOP_MCLUSTER) %}
+        {# Resolve the VRF objects upfront #}
+        {% set vrf_objs = [] %}
+        {{ vrf_definition(DEFN_VRF, DEFN_VRF_TO_NODE, DEVICE_HOSTNAME) }}
+        
+        ! *** FABRIC-LOOPBACKS FOR {{DEVICE_HOSTNAME}}
+        {# UNDERLAY LOOPBACKS #}
+        interface {{DEFN_LOOP_NAME['UNDERLAY']}}
+         description UNDERLAY-NVE-INTERFACE
+         ip address {{DEFN_LOOP_UNDERLAY[DEVICE_HOSTNAME]}} 255.255.255.255
+         ip pim sparse-mode
+        !
+        {% if DEVICE_HOSTNAME in DEFN_NODE_ROLES['SPINE']  %}
+        {# SKIP SPINE #}
+        {% elif DEVICE_HOSTNAME in DEFN_NODE_ROLES['BORDER'] %}
+        interface {{DEFN_LOOP_NAME['IPSEC']}}
+         description IPSEC TUNNEL SOURCE INTERFACE
+         ip address {{DEFN_LOOP_IPSEC[DEVICE_HOSTNAME]}} 255.255.255.255
+         ip ospf {{FABRIC_UNDERLAY['instance_id']}} area {{FABRIC_UNDERLAY['area']}}
+        !
+        interface {{DEFN_LOOP_NAME['MCLUSTER']}}
+         description NVE MULTICLUSTER INTERFACE
+         ip address {{DEFN_LOOP_MCLUSTER[DEVICE_HOSTNAME]}} 255.255.255.255
+        !
+        {% else %}
+        {% for input_vrf in vrf_objs %}
+        {% set ip = DEFN_LOOP_UNDERLAY[DEVICE_HOSTNAME] %}
+        {% set split_ip = ip.split('\\.') %}
+        {% set last_octet = split_ip[3] %}
+        interface Loopback{{input_vrf.id}}
+         description OVERLAY-VRF-{{input_vrf.name}}
+         vrf forwarding {{input_vrf.name}}
+         ip address {{DEFN_LOOP_OVERLAY[input_vrf.name]}}{{last_octet}} 255.255.255.255
+         ip pim sparse-mode
+        !
+        {% endfor %}
+        {% endif %}
+        
+        {% endmacro %}
+        
+        {# End of File #}
+        {% endraw %}
+      version: "1.0"
+
+  - configuration_templates:
+      author: admin
+      composite: false
+      custom_params_order: true
+      template_description: "NVE interface configuration - Cluster 187"
+      device_types:
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9500 Series Switches
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9000 Series Virtual Switches
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9300 Series Switches
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9400 Series Switches
+      failure_policy: ABORT_TARGET_ON_ERROR
+      language: JINJA
+      template_name: "3. FABRIC-NVE"
+      project_name: EVPN_Cluster187
+      project_description: "BGP EVPN VXLAN Campus Fabric Templates - Cluster 187 SJC"
+      software_type: IOS-XE
+      software_version: null
+      template_content: |
+        {% raw %}
+        {#BOOTSTRAP FOR SIMULATION#}
+        {# {% include "EVPN_Cluster187/DEFN-VRF.j2" %} #}
+        {# {% include "EVPN_Cluster187/FUNC-OBJECT-MACROS.j2" %} #}
+        {# {% include "EVPN_Cluster187/DEFN-ROLES.j2" %} #}
+        {# {% include "EVPN_Cluster187/DEFN-LOOPBACKS.j2" %} #}
+        {# {% include "EVPN_Cluster187/DEFN-VNIOFFSETS.j2" %} #}
+        
+        {% macro nveVlanBuild(DEFN_VRF, DEFN_VRF_TO_NODE, DEVICE_HOSTNAME, L3VNIOFFSET, DEFN_LOOP_NAME) %}
+        
+        {# Resolve the VRF objects upfront #}
+        {% set vrf_objs = [] %}
+        {{ vrf_definition(DEFN_VRF, DEFN_VRF_TO_NODE, DEVICE_HOSTNAME) }}
+        
+        {# --- VLAN SECTION --- #}
+        ! @start-ignore-compliance {#transparent mode#}
+        {% for vrf in vrf_objs %}
+        vlan {{ vrf.id }}
+         name L3-VRF-CORE-{{ vrf.id }}
+        !
+        {% endfor %}
+        ! @end-ignore-compliance
+        
+        {# --- VLAN CONFIGURATION SECTION --- #}
+        {% for vrf in vrf_objs %}
+        vlan configuration {{ vrf.id }}
+         member vni {{ (L3VNIOFFSET|string) + vrf.id }}
+        !
+        {% endfor %}
+        
+        {# --- INTERFACE VLAN SECTION --- #}
+        {% for vrf in vrf_objs %}
+        interface Vlan{{ vrf.id }}
+         description ** SVI for {{ vrf.name }} L3VNI **
+         vrf forwarding {{ vrf.name }}
+         ip unnumbered {{ DEFN_LOOP_NAME['UNDERLAY'] }}
+         no ip redirects
+         no ip unreachables
+         no ip proxy-arp
+         ip pim sparse-mode
+         load-interval 30
+         carrier-delay msec 0
+         no autostate
+         hold-queue 4094 in
+         hold-queue 4094 out
+        {% endfor %}
+        
+        {# --- INTERFACE NVE1 SECTION --- #}
+        interface nve1
+         description ** NVE Interface for VXLAN **
+         no ip address
+         source-interface {{ DEFN_LOOP_NAME['UNDERLAY'] }}
+         host-reachability protocol bgp
+        {% for vrf in vrf_objs %}
+         member vni {{ (L3VNIOFFSET|string) + vrf.id }} vrf {{ vrf.name }}
+        {% endfor %}
+            
+        {% endmacro %}
+        
+        {# End of File #}
+        {% endraw %}
+      template_params:
+        - parameter_name: L3VNIOFFSET
+          data_type: INTEGER
+          default_value: "50"
+          description: "L3 VNI offset"
+          required: true
+          param_array: false
+      version: "1.0"
+
+  - configuration_templates:
+      author: admin
+      composite: false
+      custom_params_order: true
+      template_description: "Multicast configuration for BUM traffic - Cluster 187"
+      device_types:
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9500 Series Switches
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9000 Series Virtual Switches
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9300 Series Switches
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9400 Series Switches
+      failure_policy: ABORT_TARGET_ON_ERROR
+      language: JINJA
+      template_name: "4. FABRIC-MCAST"
+      project_name: EVPN_Cluster187
+      project_description: "BGP EVPN VXLAN Campus Fabric Templates - Cluster 187 SJC"
+      software_type: IOS-XE
+      software_version: null
+      template_content: |
+        {% raw %}
+        {#BOOTSTRAP FOR SIMULATION#}
+        {# {% include "EVPN_Cluster187/DEFN-VRF.j2" %} #}
+        {# {% include "EVPN_Cluster187/FUNC-OBJECT-MACROS.j2" %} #}
+        {# {% include "EVPN_Cluster187/DEFN-ROLES.j2" %} #}
+        {# {% include "EVPN_Cluster187/DEFN-LOOPBACKS.j2" %} #}
+        {# {% include "EVPN_Cluster187/DEFN-OVERLAY.j2" %} #}
+        {# {% include "EVPN_Cluster187/DEFN-L3OUT.j2" %} #}
+        {# {% include "EVPN_Cluster187/DEFN-MCAST.j2" %} #}
+        
+        {% macro multicastRoutingBuild(DEFN_VRF, DEFN_VRF_TO_NODE, DEVICE_HOSTNAME, DEFN_NODE_ROLES, DEFN_LOOP_NAME, DEFN_LOOP_UNDERLAY, FABRIC_RP_ADDR, FABRIC_UNDERLAY, FABRIC_BGP_ASN, FABRIC_RP_SCOPES, ENTERPRISE_RP_SCOPES, ENTERPRISE_RP_ADDR, DEFN_L3OUT ) %}
+        
+        {# Resolve the VRF objects upfront #}
+        {% set vrf_objs = [] %}
+        {{ vrf_definition(DEFN_VRF, DEFN_VRF_TO_NODE, DEVICE_HOSTNAME) }}
+        
+        ip multicast-routing
+        !
+        {% for vrf in vrf_objs %}
+        ip multicast-routing vrf {{vrf.name}}
+        {% endfor %}
+        !
+        ip pim spt-threshold 0
+        !
+        {# CONFIGURE ANYCAST RP INTERFACE ON SPINES ONLY #}
+        {% if DEVICE_HOSTNAME in DEFN_NODE_ROLES['SPINE'] %}
+        interface {{DEFN_LOOP_NAME['ANYCAST']}}
+         description AnycastRP Fabric Loopback
+         ip address {{FABRIC_RP_ADDR}} 255.255.255.255
+         ip pim sparse-mode
+         ip {{FABRIC_UNDERLAY.proto}} {{FABRIC_UNDERLAY.instance_id}} area {{FABRIC_UNDERLAY.area}}
+        !
+         ip msdp cache-sa-state
+        {% for spine in DEFN_NODE_ROLES['SPINE'] %}
+        {% if spine != DEVICE_HOSTNAME %}
+        ip msdp peer {{DEFN_LOOP_UNDERLAY[spine]}} connect-source {{DEFN_LOOP_NAME['UNDERLAY']}} remote-as {{FABRIC_BGP_ASN}}
+        {% endif %}
+        {% endfor %}
+        {% endif %}
+        
+        {% endmacro %}
+        
+        {# End of File #}
+        {% endraw %}
+      template_params:
+        - parameter_name: FABRIC_RP_ADDR
+          data_type: STRING
+          default_value: "204.192.3.41"
+          description: "Fabric RP address"
+          required: true
+          param_array: false
+        - parameter_name: FABRIC_BGP_ASN
+          data_type: INTEGER
+          default_value: "65001"
+          description: "BGP AS number"
+          required: true
+          param_array: false
+      version: "1.0"
+
+  - configuration_templates:
+      author: admin
+      composite: false
+      custom_params_order: true
+      template_description: "IPSec tunnel configuration - Cluster 187"
+      device_types:
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9500 Series Switches
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9000 Series Virtual Switches
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9300 Series Switches
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9400 Series Switches
+      failure_policy: ABORT_TARGET_ON_ERROR
+      language: JINJA
+      template_name: "7. FABRIC-IPSEC"
+      project_name: EVPN_Cluster187
+      project_description: "BGP EVPN VXLAN Campus Fabric Templates - Cluster 187 SJC"
+      software_type: IOS-XE
+      software_version: null
+      template_content: |
+        {% raw %}
+        {#BOOTSTRAP FOR SIMULATION#}
+        {# {% include "EVPN_Cluster187/DEFN-ROLES.j2" %} #}
+        {# {% include "EVPN_Cluster187/DEFN-LOOPBACKS.j2" %} #}
+        {# {% include "EVPN_Cluster187/DEFN-OVERLAY.j2" %} #}
+        {# {% include "EVPN_Cluster187/DEFN-IPSEC.j2" %} #}
+        
+        {% macro interfaceTunnelBuild(DEFN_NODE_ROLES, FABRIC_IPSEC_UNDERLAY, DEFN_LOOP_IPSEC, DEFN_LOOP_NAME) %}
+        
+        {% if DEVICE_HOSTNAME in DEFN_NODE_ROLES['BORDER']  %}
+        router ospf {{FABRIC_IPSEC_UNDERLAY['instance_id']}}
+         router-id {{DEFN_LOOP_IPSEC[DEVICE_HOSTNAME]}}
+        !
+        {% set tun_index = (DEFN_LOOP_IPSEC[DEVICE_HOSTNAME]).split('\\.')[3] | int %}
+        {% set tun_list = DEFN_IPSEC[DEVICE_HOSTNAME] %}
+        {% for tun in tun_list %}
+        interface Tunnel{{tun_index + loop.index0}}
+         description TUNNEL TO DMZ HUB
+         ip address {{tun['tun_ip']}}
+         ip ospf {{FABRIC_IPSEC_UNDERLAY['instance_id']}} area {{FABRIC_IPSEC_UNDERLAY['area']}}
+         carrier-delay msec 0
+         tunnel source {{DEFN_LOOP_NAME['IPSEC']}}
+         tunnel mode {{tun['tun_mode']}}
+         tunnel destination {{tun['tun_dst']}}
+        {% endfor %}
+        {% endif %}
+            
+        {% endmacro %}
+        
+        {# End of File #}
+        {% endraw %}
+      version: "1.0"
