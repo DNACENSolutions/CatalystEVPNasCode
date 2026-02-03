@@ -18,7 +18,8 @@
   connection: local
   gather_facts: false
   vars_files:
-    - ../data/bgp_evpn_rev2_templates_cluster187.yaml
+    #- ../data/bgp_evpn_rev2_templates_cluster187.yaml
+    - ../data/bgp_evpn_templates_with_files.yml
     - ../data/bgp_evpn_site_01.yml
   
   tasks:

@@ -18,20 +18,24 @@ catalyst_center_version: 2.3.7.9
 #   - DEFN-IPSEC: IPSec definitions for hardware-accelerated encryption
 #
 # Fabric Templates (FABRIC-*):
-#   - 1. FABRIC-VRF: VRF configuration for multi-tenancy
-#   - 2. FABRIC-LOOPBACKS: Loopback interface configuration
-#   - 3. FABRIC-NVE: Network Virtualization Edge (NVE) interface configuration
-#   - 4. FABRIC-MCAST: Multicast configuration for EVPN fabric
-#   - 5. FABRIC-EVPN: BGP EVPN control plane configuration
-#   - 6. FABRIC-OVERLAY: VXLAN overlay network services
-#   - 7. FABRIC-NAC-IOT: Network Access Control for IoT segments
-#   - 8. FABRIC-IPSEC: IPSec configuration for hardware encryption
+#   - FABRIC-VRF: VRF configuration for multi-tenancy
+#   - FABRIC-LOOPBACKS: Loopback interface configuration
+#   - FABRIC-NVE: Network Virtualization Edge (NVE) interface configuration
+#   - FABRIC-MCAST: Multicast configuration for EVPN fabric
+#   - FABRIC-EVPN: BGP EVPN control plane configuration
+#   - FABRIC-OVERLAY: VXLAN overlay network services
+#   - FABRIC-NAC-IOT: Network Access Control for IoT segments
+#   - FABRIC-IPSEC: IPSec configuration for hardware encryption
 #
 # Composite Templates:
-#   - 0. BGP-EVPN: Complete BGP EVPN fabric configuration (combines all FABRIC templates)
+#   - BGP-EVPN-BUILD: Complete BGP EVPN fabric configuration (master build template)
 #
 # Usage: Deploy these templates to Catalyst Center using the device_templates role
 # or the template management workflows from catalyst-center-iac submodule
+
+# Variables for template paths
+bgp_evpn_site_dir: "/Users/pawansi/workspace/CatC_BGP_EVPNacCode/CatalystEVPNasCode/data/BGP_EVPN_SITE_SJC"
+bgp_evpn_project: "BGP_EVPN_SITE_SJC"
 template_details:
   # BGP EVPN Project Templates - Definition Templates
   - configuration_templates:
@@ -45,11 +49,13 @@ template_details:
       failure_policy: ABORT_TARGET_ON_ERROR
       language: JINJA
       template_name: DEFN-MCAST
-      project_name: EVPN
+      project_name: "{{bgp_evpn_project}}"
       project_description: "BGP EVPN VXLAN Campus Fabric Templates"
-      software_type: IOS-XE
+      software_type: IOS
+      softwareVariant: XE
       software_version: null
-      template_file: "data/catalyst-center-bgp-evpn-examples/BGP_EVPN_rev2/DEFN-MCAST.j2"
+      template_content_file_path: "{{bgp_evpn_site_dir}}/DEFN-MCAST.j2"
+      template_params: []
       version: "1.0"
 
   - configuration_templates:
@@ -63,11 +69,13 @@ template_details:
       failure_policy: ABORT_TARGET_ON_ERROR
       language: JINJA
       template_name: DEFN-VRF
-      project_name: EVPN
+      project_name: "{{bgp_evpn_project}}"
       project_description: "BGP EVPN VXLAN Campus Fabric Templates"
-      software_type: IOS-XE
+      software_type: IOS
+      softwareVariant: XE
       software_version: null
-      template_file: "data/catalyst-center-bgp-evpn-examples/BGP_EVPN_rev2/DEFN-VRF.j2"
+      template_content_file_path: "{{bgp_evpn_site_dir}}/DEFN-VRF.j2"
+      template_params: []
       version: "1.0"
 
   - configuration_templates:
@@ -81,11 +89,13 @@ template_details:
       failure_policy: ABORT_TARGET_ON_ERROR
       language: JINJA
       template_name: DEFN-ROLES
-      project_name: EVPN
+      project_name: "{{bgp_evpn_project}}"
       project_description: "BGP EVPN VXLAN Campus Fabric Templates"
-      software_type: IOS-XE
+      software_type: IOS
+      softwareVariant: XE
       software_version: null
-      template_file: "data/catalyst-center-bgp-evpn-examples/BGP_EVPN_rev2/DEFN-ROLES.j2"
+      template_content_file_path: "{{bgp_evpn_site_dir}}/DEFN-ROLES.j2"
+      template_params: []
       version: "1.0"
 
   - configuration_templates:
@@ -99,11 +109,13 @@ template_details:
       failure_policy: ABORT_TARGET_ON_ERROR
       language: JINJA
       template_name: DEFN-LOOPBACKS
-      project_name: EVPN
+      project_name: "{{bgp_evpn_project}}"
       project_description: "BGP EVPN VXLAN Campus Fabric Templates"
-      software_type: IOS-XE
+      software_type: IOS
+      softwareVariant: XE
       software_version: null
-      template_file: "data/catalyst-center-bgp-evpn-examples/BGP_EVPN_rev2/DEFN-LOOPBACKS.j2"
+      template_content_file_path: "{{bgp_evpn_site_dir}}/DEFN-LOOPBACKS.j2"
+      template_params: []
       version: "1.0"
 
   - configuration_templates:
@@ -117,11 +129,13 @@ template_details:
       failure_policy: ABORT_TARGET_ON_ERROR
       language: JINJA
       template_name: DEFN-VNIOFFSETS
-      project_name: EVPN
+      project_name: "{{bgp_evpn_project}}"
       project_description: "BGP EVPN VXLAN Campus Fabric Templates"
-      software_type: IOS-XE
+      software_type: IOS
+      softwareVariant: XE
       software_version: null
-      template_file: "data/catalyst-center-bgp-evpn-examples/BGP_EVPN_rev2/DEFN-VNIOFFSETS.j2"
+      template_content_file_path: "{{bgp_evpn_site_dir}}/DEFN-VNIOFFSETS.j2"
+      template_params: []
       version: "1.0"
 
   - configuration_templates:
@@ -141,11 +155,13 @@ template_details:
       failure_policy: ABORT_TARGET_ON_ERROR
       language: JINJA
       template_name: DEFN-OVERLAY
-      project_name: EVPN
+      project_name: "{{bgp_evpn_project}}"
       project_description: "BGP EVPN VXLAN Campus Fabric Templates"
-      software_type: IOS-XE
+      software_type: IOS
+      softwareVariant: XE
       software_version: null
-      template_file: "data/catalyst-center-bgp-evpn-examples/BGP_EVPN_rev2/DEFN-OVERLAY.j2"
+      template_content_file_path: "{{bgp_evpn_site_dir}}/DEFN-OVERLAY.j2"
+      template_params: []
       version: "1.0"
 
   - configuration_templates:
@@ -159,11 +175,13 @@ template_details:
       failure_policy: ABORT_TARGET_ON_ERROR
       language: JINJA
       template_name: DEFN-L3OUT
-      project_name: EVPN
+      project_name: "{{bgp_evpn_project}}"
       project_description: "BGP EVPN VXLAN Campus Fabric Templates"
-      software_type: IOS-XE
+      software_type: IOS
+      softwareVariant: XE
       software_version: null
-      template_file: "data/catalyst-center-bgp-evpn-examples/BGP_EVPN_rev2/DEFN-L3OUT.j2"
+      template_content_file_path: "{{bgp_evpn_site_dir}}/DEFN-L3OUT.j2"
+      template_params: []
       version: "1.0"
 
   - configuration_templates:
@@ -177,11 +195,13 @@ template_details:
       failure_policy: ABORT_TARGET_ON_ERROR
       language: JINJA
       template_name: DEFN-NAC-IOT
-      project_name: EVPN
+      project_name: "{{bgp_evpn_project}}"
       project_description: "BGP EVPN VXLAN Campus Fabric Templates"
-      software_type: IOS-XE
+      software_type: IOS
+      softwareVariant: XE
       software_version: null
-      template_file: "data/catalyst-center-bgp-evpn-examples/BGP_EVPN_rev2/DEFN-NAC-IOT.j2"
+      template_content_file_path: "{{bgp_evpn_site_dir}}/DEFN-NAC-IOT.j2"
+      template_params: []
       version: "1.0"
 
   - configuration_templates:
@@ -195,11 +215,13 @@ template_details:
       failure_policy: ABORT_TARGET_ON_ERROR
       language: JINJA
       template_name: DEFN-IPSEC
-      project_name: EVPN
+      project_name: "{{bgp_evpn_project}}"
       project_description: "BGP EVPN VXLAN Campus Fabric Templates"
-      software_type: IOS-XE
+      software_type: IOS
+      softwareVariant: XE
       software_version: null
-      template_file: "data/catalyst-center-bgp-evpn-examples/BGP_EVPN_rev2/DEFN-IPSEC.j2"
+      template_content_file_path: "{{bgp_evpn_site_dir}}/DEFN-IPSEC.j2"
+      template_params: []
       version: "1.0"
 
   # Fabric Templates
@@ -219,37 +241,14 @@ template_details:
           product_series: Cisco Catalyst 9400 Series Switches
       failure_policy: ABORT_TARGET_ON_ERROR
       language: JINJA
-      template_name: "1. FABRIC-VRF"
-      project_name: EVPN
+      template_name: FABRIC-VRF
+      project_name: "{{bgp_evpn_project}}"
       project_description: "BGP EVPN VXLAN Campus Fabric Templates"
-      software_type: IOS-XE
+      software_type: IOS
+      softwareVariant: XE
       software_version: null
-      template_file: "data/catalyst-center-bgp-evpn-examples/BGP_EVPN_rev2/FABRIC-VRF.j2"
-      template_params:
-        - parameter_name: vrf_list
-          data_type: STRING
-          default_value: null
-          description: "List of VRF names to configure"
-          required: false
-          param_array: true
-          selection:
-            selection_type: MULTI_SELECT
-            selection_values:
-              "901": "red"
-              "902": "green"
-              "903": "blue"
-        - parameter_name: FABRIC_BGP_ASN
-          data_type: INTEGER
-          default_value: 65001
-          description: "BGP AS number for the fabric"
-          required: true
-          param_array: false
-        - parameter_name: __device
-          data_type: STRING
-          default_value: null
-          description: "Device object"
-          required: true
-          param_array: false
+      template_content_file_path: "{{bgp_evpn_site_dir}}/FABRIC-VRF.j2"
+      template_params: []
       version: "1.0"
 
   - configuration_templates:
@@ -268,37 +267,14 @@ template_details:
           product_series: Cisco Catalyst 9400 Series Switches
       failure_policy: ABORT_TARGET_ON_ERROR
       language: JINJA
-      template_name: "2. FABRIC-LOOPBACKS"
-      project_name: EVPN
+      template_name: FABRIC-LOOPBACKS
+      project_name: "{{bgp_evpn_project}}"
       project_description: "BGP EVPN VXLAN Campus Fabric Templates"
-      software_type: IOS-XE
+      software_type: IOS
+      softwareVariant: XE
       software_version: null
-      template_file: "data/catalyst-center-bgp-evpn-examples/BGP_EVPN_rev2/FABRIC-LOOPBACKS.j2"
-      template_params:
-        - parameter_name: vrf_list
-          data_type: STRING
-          default_value: null
-          description: "List of VRF names to configure"
-          required: false
-          param_array: true
-          selection:
-            selection_type: MULTI_SELECT
-            selection_values:
-              "901": "red"
-              "902": "green"
-              "903": "blue"
-        - parameter_name: vlan_id
-          data_type: STRING
-          default_value: null
-          description: "VLAN ID"
-          required: true
-          param_array: false
-        - parameter_name: __device
-          data_type: STRING
-          default_value: null
-          description: "Device object"
-          required: true
-          param_array: false
+      template_content_file_path: "{{bgp_evpn_site_dir}}/FABRIC-LOOPBACKS.j2"
+      template_params: []
       version: "1.0"
 
   - configuration_templates:
@@ -317,37 +293,14 @@ template_details:
           product_series: Cisco Catalyst 9400 Series Switches
       failure_policy: ABORT_TARGET_ON_ERROR
       language: JINJA
-      template_name: "3. FABRIC-NVE"
-      project_name: EVPN
+      template_name: FABRIC-NVE
+      project_name: "{{bgp_evpn_project}}"
       project_description: "BGP EVPN VXLAN Campus Fabric Templates"
-      software_type: IOS-XE
+      software_type: IOS
+      softwareVariant: XE
       software_version: null
-      template_file: "data/catalyst-center-bgp-evpn-examples/BGP_EVPN_rev2/FABRIC-NVE.j2"
-      template_params:
-        - parameter_name: vrf_list
-          data_type: STRING
-          default_value: null
-          description: "List of VRF names to configure"
-          required: false
-          param_array: true
-          selection:
-            selection_type: MULTI_SELECT
-            selection_values:
-              "901": "red"
-              "902": "green"
-              "903": "blue"
-        - parameter_name: L3VNIOFFSET
-          data_type: INTEGER
-          default_value: 50
-          description: "L3 VNI offset for VRF VNIs"
-          required: true
-          param_array: false
-        - parameter_name: __device
-          data_type: STRING
-          default_value: null
-          description: "Device object"
-          required: true
-          param_array: false
+      template_content_file_path: "{{bgp_evpn_site_dir}}/FABRIC-NVE.j2"
+      template_params: []
       version: "1.0"
 
   - configuration_templates:
@@ -366,31 +319,14 @@ template_details:
           product_series: Cisco Catalyst 9400 Series Switches
       failure_policy: ABORT_TARGET_ON_ERROR
       language: JINJA
-      template_name: "4. FABRIC-MCAST"
-      project_name: EVPN
+      template_name: FABRIC-MCAST
+      project_name: "{{bgp_evpn_project}}"
       project_description: "BGP EVPN VXLAN Campus Fabric Templates"
-      software_type: IOS-XE
+      software_type: IOS
+      softwareVariant: XE
       software_version: null
-      template_file: "data/catalyst-center-bgp-evpn-examples/BGP_EVPN_rev2/FABRIC-MCAST.j2"
-      template_params:
-        - parameter_name: vrf_list
-          data_type: STRING
-          default_value: null
-          description: "List of VRF names to configure"
-          required: true
-          param_array: true
-          selection:
-            selection_type: MULTI_SELECT
-            selection_values:
-              "901": "red"
-              "902": "blue"
-              "903": "green"
-        - parameter_name: __device
-          data_type: STRING
-          default_value: null
-          description: "Device object"
-          required: true
-          param_array: false
+      template_content_file_path: "{{bgp_evpn_site_dir}}/FABRIC-MCAST.j2"
+      template_params: []
       version: "1.0"
 
   - configuration_templates:
@@ -409,31 +345,14 @@ template_details:
           product_series: Cisco Catalyst 9400 Series Switches
       failure_policy: ABORT_TARGET_ON_ERROR
       language: JINJA
-      template_name: "5. FABRIC-EVPN"
-      project_name: EVPN
+      template_name: FABRIC-EVPN
+      project_name: "{{bgp_evpn_project}}"
       project_description: "BGP EVPN VXLAN Campus Fabric Templates"
-      software_type: IOS-XE
+      software_type: IOS
+      softwareVariant: XE
       software_version: null
-      template_file: "data/catalyst-center-bgp-evpn-examples/BGP_EVPN_rev2/FABRIC-EVPN.j2"
-      template_params:
-        - parameter_name: vrf_list
-          data_type: STRING
-          default_value: null
-          description: "List of VRF names to configure"
-          required: true
-          param_array: true
-          selection:
-            selection_type: MULTI_SELECT
-            selection_values:
-              "901": "red"
-              "902": "blue"
-              "903": "green"
-        - parameter_name: __device
-          data_type: STRING
-          default_value: null
-          description: "Device object"
-          required: true
-          param_array: false
+      template_content_file_path: "{{bgp_evpn_site_dir}}/FABRIC-EVPN.j2"
+      template_params: []
       version: "1.0"
 
   - configuration_templates:
@@ -452,31 +371,14 @@ template_details:
           product_series: Cisco Catalyst 9400 Series Switches
       failure_policy: ABORT_TARGET_ON_ERROR
       language: JINJA
-      template_name: "6. FABRIC-OVERLAY"
-      project_name: EVPN
+      template_name: FABRIC-OVERLAY
+      project_name: "{{bgp_evpn_project}}"
       project_description: "BGP EVPN VXLAN Campus Fabric Templates"
-      software_type: IOS-XE
+      software_type: IOS
+      softwareVariant: XE
       software_version: null
-      template_file: "data/catalyst-center-bgp-evpn-examples/BGP_EVPN_rev2/FABRIC-OVERLAY.j2"
-      template_params:
-        - parameter_name: vrf_list
-          data_type: STRING
-          default_value: null
-          description: "List of VRF names to configure"
-          required: false
-          param_array: true
-          selection:
-            selection_type: MULTI_SELECT
-            selection_values:
-              "901": "red"
-              "902": "blue"
-              "903": "green"
-        - parameter_name: __device
-          data_type: STRING
-          default_value: null
-          description: "Device object"
-          required: true
-          param_array: false
+      template_content_file_path: "{{bgp_evpn_site_dir}}/FABRIC-OVERLAY.j2"
+      template_params: []
       version: "1.0"
 
   - configuration_templates:
@@ -495,25 +397,14 @@ template_details:
           product_series: Cisco Catalyst 9400 Series Switches
       failure_policy: ABORT_TARGET_ON_ERROR
       language: JINJA
-      template_name: "7. FABRIC-NAC-IOT"
-      project_name: EVPN
+      template_name: FABRIC-NAC-IOT
+      project_name: "{{bgp_evpn_project}}"
       project_description: "BGP EVPN VXLAN Campus Fabric Templates"
-      software_type: IOS-XE
+      software_type: IOS
+      softwareVariant: XE
       software_version: null
-      template_file: "data/catalyst-center-bgp-evpn-examples/BGP_EVPN_rev2/FABRIC-NAC-IOT.j2"
-      template_params:
-        - parameter_name: vrf_list
-          data_type: STRING
-          default_value: null
-          description: "List of VRF names to configure"
-          required: false
-          param_array: true
-          selection:
-            selection_type: MULTI_SELECT
-            selection_values:
-              "901": "red"
-              "902": "green"
-              "903": "blue"
+      template_content_file_path: "{{bgp_evpn_site_dir}}/FABRIC-NAC-IOT.j2"
+      template_params: []
       version: "1.0"
 
   - configuration_templates:
@@ -532,98 +423,15 @@ template_details:
           product_series: Cisco Catalyst 9400 Series Switches
       failure_policy: ABORT_TARGET_ON_ERROR
       language: JINJA
-      template_name: "8. FABRIC-IPSEC"
-      project_name: EVPN
+      template_name: FABRIC-IPSEC
+      project_name: "{{bgp_evpn_project}}"
       project_description: "BGP EVPN VXLAN Campus Fabric Templates"
-      software_type: IOS-XE
+      software_type: IOS
+      softwareVariant: XE
       software_version: null
-      template_file: "data/catalyst-center-bgp-evpn-examples/BGP_EVPN_rev2/FABRIC-IPSEC.j2"
-      template_params:
-        - parameter_name: vrf_list
-          data_type: STRING
-          default_value: null
-          description: "List of VRF names to configure"
-          required: false
-          param_array: true
-          selection:
-            selection_type: MULTI_SELECT
-            selection_values:
-              "901": "red"
-              "902": "green"
-              "903": "blue"
-        - parameter_name: __device
-          data_type: STRING
-          default_value: null
-          description: "Device object"
-          required: true
-          param_array: false
+      template_content_file_path: "{{bgp_evpn_site_dir}}/FABRIC-IPSEC.j2"
+      template_params: []
       version: "1.0"
-
-  # Composite template that combines all FABRIC templates
-  - configuration_templates:
-      author: admin
-      composite: true
-      custom_params_order: false
-      template_description: "Complete BGP EVPN fabric configuration composite template"
-      device_types:
-        - product_family: Switches and Hubs
-          product_series: Cisco Catalyst 9500 Series Switches
-        - product_family: Switches and Hubs
-          product_series: Cisco Catalyst 9000 Series Virtual Switches
-        - product_family: Switches and Hubs
-          product_series: Cisco Catalyst 9300 Series Switches
-        - product_family: Switches and Hubs
-          product_series: Cisco Catalyst 9400 Series Switches
-      failure_policy: ABORT_TARGET_ON_ERROR
-      language: JINJA
-      template_name: "0. BGP-EVPN"
-      project_name: EVPN
-      project_description: "BGP EVPN VXLAN Campus Fabric Templates"
-      software_type: IOS-XE
-      software_version: null
-      containing_templates:
-        - name: "1. FABRIC-VRF"
-          composite: false
-          language: JINJA
-          description: ""
-          project_name: EVPN
-        - name: "2. FABRIC-LOOPBACKS"
-          composite: false
-          language: JINJA
-          description: ""
-          project_name: EVPN
-        - name: "3. FABRIC-NVE"
-          composite: false
-          language: JINJA
-          description: ""
-          project_name: EVPN
-        - name: "4. FABRIC-MCAST"
-          composite: false
-          language: JINJA
-          description: ""
-          project_name: EVPN
-        - name: "5. FABRIC-EVPN"
-          composite: false
-          language: JINJA
-          description: ""
-          project_name: EVPN
-        - name: "6. FABRIC-OVERLAY"
-          composite: false
-          language: JINJA
-          description: ""
-          project_name: EVPN
-        - name: "7. FABRIC-NAC-IOT"
-          composite: false
-          language: JINJA
-          description: ""
-          project_name: EVPN
-        - name: "8. FABRIC-IPSEC"
-          composite: false
-          language: JINJA
-          description: ""
-          project_name: EVPN
-      version: "1.0"
-
   # Additional template that includes all functionality in a single build template
   - configuration_templates:
       author: admin
@@ -641,29 +449,12 @@ template_details:
           product_series: Cisco Catalyst 9400 Series Switches
       failure_policy: ABORT_TARGET_ON_ERROR
       language: JINJA
-      template_name: "BGP-EVPN-BUILD"
-      project_name: EVPN
+      template_name: BGP-EVPN-BUILD
+      project_name: "{{bgp_evpn_project}}"
       project_description: "BGP EVPN VXLAN Campus Fabric Templates"
-      software_type: IOS-XE
+      software_type: IOS
+      softwareVariant: XE
       software_version: null
-      template_file: "data/catalyst-center-bgp-evpn-examples/BGP_EVPN_rev2/BGP-EVPN-BUILD.j2"
-      template_params:
-        - parameter_name: vrf_list
-          data_type: STRING
-          default_value: null
-          description: "List of VRF names to configure"
-          required: true
-          param_array: true
-          selection:
-            selection_type: MULTI_SELECT
-            selection_values:
-              "901": "red"
-              "902": "blue"
-              "903": "green"
-        - parameter_name: __device
-          data_type: STRING
-          default_value: null
-          description: "Device object"
-          required: true
-          param_array: false
+      template_content_file_path: "{{bgp_evpn_site_dir}}/BGP-EVPN-BUILD.j2"
+      template_params: []
       version: "1.0"
