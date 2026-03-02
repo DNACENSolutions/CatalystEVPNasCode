@@ -1,0 +1,84 @@
+================================================================================
+BGP EVPN Cleanup Summary Report
+Generated: 2026-02-09 13:41:02
+================================================================================
+
+Device: TB16-Fusion
+  VRFs to remove:          12
+  VLANs to remove:         1
+  L2VPN instances:         0
+  NVE interfaces:          0
+  SVI interfaces:          41
+  Has BGP EVPN:            No
+
+Device: TB16-SJ-BORDER-1
+  VRFs to remove:          2
+  VLANs to remove:         3
+  L2VPN instances:         0
+  NVE interfaces:          1
+  SVI interfaces:          5
+  Has BGP EVPN:            No
+
+Device: TB16-SJ-BORDER-2
+  VRFs to remove:          2
+  VLANs to remove:         5
+  L2VPN instances:         0
+  NVE interfaces:          1
+  SVI interfaces:          6
+  Has BGP EVPN:            No
+
+Device: TB16-SJ-Border-3
+  VRFs to remove:          1
+  VLANs to remove:         3
+  L2VPN instances:         0
+  NVE interfaces:          1
+  SVI interfaces:          4
+  Has BGP EVPN:            No
+
+Device: TB16-SJ-Leaf-1
+  VRFs to remove:          3
+  VLANs to remove:         9
+  L2VPN instances:         4
+  NVE interfaces:          1
+  SVI interfaces:          9
+  Has BGP EVPN:            No
+
+Device: TB16-SJ-Leaf-2
+  VRFs to remove:          3
+  VLANs to remove:         7
+  L2VPN instances:         4
+  NVE interfaces:          1
+  SVI interfaces:          8
+  Has BGP EVPN:            No
+
+Device: TB16-SJ-Leaf-3
+  VRFs to remove:          3
+  VLANs to remove:         7
+  L2VPN instances:         4
+  NVE interfaces:          1
+  SVI interfaces:          8
+  Has BGP EVPN:            No
+
+Device: TB16-Spine
+  VRFs to remove:          1
+  VLANs to remove:         4
+  L2VPN instances:         0
+  NVE interfaces:          1
+  SVI interfaces:          6
+  Has BGP EVPN:            No
+
+================================================================================
+Total Summary:
+  Devices processed:       8
+  Total VRFs:              27
+  Total VLANs:             39
+  Total L2VPN instances:   12
+================================================================================
+
+Preserved Components:
+  ✓ ISIS routing protocol
+  ✓ OSPF routing protocol
+  ✓ Physical interfaces
+  ✓ Management VRF
+  ✓ AAA configuration
+  ✓ Basic device settings

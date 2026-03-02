@@ -1,0 +1,46 @@
+{## CATC: productFamily=Switches and Hubs, softwareType=IOS-XE, productSeries=Cisco Catalyst 9000 Series Virtual Switches ##}
+{% set DEFN_LOOP_UNDERLAY =
+    {
+      'ISBTE-SDA-TransitSW.cisco.com':   '204.101.16.4',
+      'ISBTE-TB3-9400.cisco.com':   '204.101.16.1',
+      'ISBTE-TB1-9500-2.cisco.com':    '204.100.64.33',
+      'ISBTE-TB1-9500-3.cisco.com':    '204.100.64.38',
+      'ISBTE-TB1-9500-1.cisco.com':    '204.101.64.2',
+      'ISBTE-TB3-Border1.cisco.com':  '204.101.16.2',
+    }
+%}
+
+{% set DEFN_LOOP_IPSEC =
+    {
+      'ISBTE-TB1-9500-1.cisco.com':    '204.101.64.2',
+      'ISBTE-TB3-Border1.cisco.com':  '204.101.16.2',
+      'ISBTE-TB3-Fusion.cisco.com':     '204.192.3.40'
+    }
+%}
+
+{% set DEFN_LOOP_MCLUSTER =
+    {
+      'ISBTE-TB1-9500-1.cisco.com':    '204.101.64.2',
+      'ISBTE-TB3-Border1.cisco.com':  '204.101.16.2',
+      'ISBTE-TB3-Fusion.cisco.com':     '204.192.3.40'
+    }
+%}
+
+{% set DEFN_LOOP_OVERLAY =
+    {
+      'red':                                    '10.1.91.',
+      'blue':                                   '10.1.92.',
+      'green':                                  '10.1.93.'
+    }
+%}
+
+{% set DEFN_LOOP_NAME =
+    {
+        'UNDERLAY': 'Loopback0',
+        'ANYCAST':  'Loopback2',
+        'IPSEC':    'Loopback1',
+        'MCLUSTER': 'Loopback2'
+    }
+%}
+
+{# End of File #}
