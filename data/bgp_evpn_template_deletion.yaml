@@ -1,0 +1,19 @@
+# Select Catalyst Center version, this one overwrite the default version from host file
+# BGP EVPN Project Templates Configuration with File References
+# Based on templates from catalyst-center-bgp-evpn-examples submodule
+# 
+# This file contains all the BGP EVPN VXLAN Campus Fabric templates:
+# Delete all the templates and Template Project
+# Usage: Deploy these templates to Catalyst Center using the device_templates role
+# or the template management workflows from catalyst-center-iac submodule
+
+# Variables for template paths
+catalyst_center_version: 2.3.7.9
+bgp_evpn_site_dir: "/Users/pawansi/workspace/CatC_BGP_EVPNacCode/CatalystEVPNasCode/data/BGP_EVPN_SITE_SJC"
+bgp_evpn_project: "BGP_EVPN_SITE_SJC"
+BGP_EVPN_PROJ: "BGP_EVPN_SITE_SJC"
+state: deleted
+template_details:
+  #BGP EVPN Project Templates - Definition Templates
+    - projects:
+      - name: "{{bgp_evpn_project}}"

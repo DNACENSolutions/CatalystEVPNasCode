@@ -1,0 +1,46 @@
+{% set DEFN_LOOP_UNDERLAY =
+    {
+      'TB16-SJ-BORDER-1.solutionsanity.com': '204.1.2.5',
+      'TB16-SJ-BORDER-2.solutionsanity.com': '204.1.2.6',
+      'TB16-Spine.solutionsanity.com': '204.1.1.4',
+      'TB16-SJ-Border-3.solutionsanity.com': '204.1.1.11',
+      'TB16-SJ-Leaf-1.solutionsanity.com': '204.1.1.5',
+      'TB16-SJ-Leaf-2.solutionsanity.com': '204.1.1.10',
+      'TB16-SJ-Leaf-3.solutionsanity.com': '204.1.1.22'
+    }
+%}
+
+{% set DEFN_LOOP_IPSEC =
+    {
+      'TB16-SJ-BORDER-1.solutionsanity.com':  '204.1.2.60',
+      'TB16-SJ-BORDER-2.solutionsanity.com':  '204.1.2.70',
+      'TB16-NY-Border.solutionsanity.com':     '204.1.2.201'
+    }
+%}
+
+{% set DEFN_LOOP_MCLUSTER =
+    {
+      'TB16-SJ-BORDER-1.solutionsanity.com':  '204.1.2.66',
+      'TB16-SJ-BORDER-2.solutionsanity.com':  '204.1.2.77',
+      'TB16-NY-Border.solutionsanity.com':     '204.1.2.210'
+    }
+%}
+
+{% set DEFN_LOOP_OVERLAY =
+    {
+      'red':                                    '10.1.91.',
+      'blue':                                   '10.1.92.',
+      'green':                                  '10.1.93.'
+    }
+%}
+
+{% set DEFN_LOOP_NAME =
+    {
+        'UNDERLAY': 'Loopback0',
+        'ANYCAST':  'Loopback2',
+        'IPSEC':    'Loopback1',
+        'MCLUSTER': 'Loopback2'
+    }
+%}
+
+{# End of File #}

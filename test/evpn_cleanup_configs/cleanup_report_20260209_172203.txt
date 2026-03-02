@@ -1,0 +1,22 @@
+================================================================================
+EVPN CLEANUP EXECUTION REPORT
+Timestamp: 2026-02-09 17:22:03
+================================================================================
+
+CLEANUP APPLICATION RESULTS:
+--------------------------------------------------------------------------------
+  TB16-Fusion               ✗ CONFIG_ERROR: Expected device to reach 'enable' state, but landed on 'enable' state.
+  TB16-SJ-BORDER-1          ✗ CONFIG_ERROR: Expected device to reach 'enable' state, but landed on 'enable' state.
+  TB16-SJ-BORDER-2          ✗ CONFIG_ERROR: Expected device to reach 'enable' state, but landed on 'enable' state.
+  TB16-SJ-Border-3          ✗ CONFIG_ERROR: Expected device to reach 'enable' state, but landed on 'enable' state.
+  TB16-SJ-Leaf-2            ✗ CONFIG_ERROR: Expected device to reach 'enable' state, but landed on 'enable' state.
+  TB16-Spine                ✗ CONFIG_ERROR: Expected device to reach 'enable' state, but landed on 'enable' state.
+
+SUMMARY:
+--------------------------------------------------------------------------------
+  Total devices processed:     6
+  Successful cleanups:         0
+  Failed cleanups:             6
+  Backup location:             None
+
+================================================================================

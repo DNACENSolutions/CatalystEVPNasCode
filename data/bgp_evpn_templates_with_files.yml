@@ -1,6 +1,4 @@
 # Select Catalyst Center version, this one overwrite the default version from host file
-catalyst_center_version: 2.3.7.9
-
 # BGP EVPN Project Templates Configuration with File References
 # Based on templates from catalyst-center-bgp-evpn-examples submodule
 # 
@@ -34,9 +32,11 @@ catalyst_center_version: 2.3.7.9
 # or the template management workflows from catalyst-center-iac submodule
 
 # Variables for template paths
+catalyst_center_version: 2.3.7.9
 bgp_evpn_site_dir: "/Users/pawansi/workspace/CatC_BGP_EVPNacCode/CatalystEVPNasCode/data/BGP_EVPN_SITE_SJC"
 bgp_evpn_project: "BGP_EVPN_SITE_SJC"
-
+BGP_EVPN_PROJ: "BGP_EVPN_SITE_SJC"
+state: merged
 template_details:
   # BGP EVPN Project Templates - Definition Templates
   - configuration_templates:
@@ -46,7 +46,13 @@ template_details:
       template_description: "Multicast definitions for EVPN fabric"
       device_types:
         - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9500 Series Switches
+        - product_family: Switches and Hubs
           product_series: Cisco Catalyst 9000 Series Virtual Switches
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9300 Series Switches
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9400 Series Switches
       failure_policy: ABORT_TARGET_ON_ERROR
       language: JINJA
       template_name: DEFN-MCAST.j2
@@ -66,7 +72,13 @@ template_details:
       template_description: "VRF definitions for multi-tenancy"
       device_types:
         - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9500 Series Switches
+        - product_family: Switches and Hubs
           product_series: Cisco Catalyst 9000 Series Virtual Switches
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9300 Series Switches
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9400 Series Switches
       failure_policy: ABORT_TARGET_ON_ERROR
       language: JINJA
       template_name: DEFN-VRF.j2
@@ -86,7 +98,13 @@ template_details:
       template_description: "Device role definitions for spine/leaf/border nodes"
       device_types:
         - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9500 Series Switches
+        - product_family: Switches and Hubs
           product_series: Cisco Catalyst 9000 Series Virtual Switches
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9300 Series Switches
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9400 Series Switches
       failure_policy: ABORT_TARGET_ON_ERROR
       language: JINJA
       template_name: DEFN-ROLES.j2
@@ -106,7 +124,13 @@ template_details:
       template_description: "Loopback interface definitions"
       device_types:
         - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9500 Series Switches
+        - product_family: Switches and Hubs
           product_series: Cisco Catalyst 9000 Series Virtual Switches
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9300 Series Switches
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9400 Series Switches
       failure_policy: ABORT_TARGET_ON_ERROR
       language: JINJA
       template_name: DEFN-LOOPBACKS.j2
@@ -126,7 +150,13 @@ template_details:
       template_description: "VNI offset definitions for L2 and L3 VNIs"
       device_types:
         - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9500 Series Switches
+        - product_family: Switches and Hubs
           product_series: Cisco Catalyst 9000 Series Virtual Switches
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9300 Series Switches
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9400 Series Switches
       failure_policy: ABORT_TARGET_ON_ERROR
       language: JINJA
       template_name: DEFN-VNIOFFSETS.j2
@@ -172,7 +202,13 @@ template_details:
       template_description: "Layer 3 external connectivity definitions"
       device_types:
         - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9500 Series Switches
+        - product_family: Switches and Hubs
           product_series: Cisco Catalyst 9000 Series Virtual Switches
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9300 Series Switches
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9400 Series Switches
       failure_policy: ABORT_TARGET_ON_ERROR
       language: JINJA
       template_name: DEFN-L3OUT.j2
@@ -192,7 +228,13 @@ template_details:
       template_description: "NAC IoT definitions for network access control"
       device_types:
         - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9500 Series Switches
+        - product_family: Switches and Hubs
           product_series: Cisco Catalyst 9000 Series Virtual Switches
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9300 Series Switches
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9400 Series Switches
       failure_policy: ABORT_TARGET_ON_ERROR
       language: JINJA
       template_name: DEFN-NAC-IOT.j2
@@ -212,7 +254,13 @@ template_details:
       template_description: "IPSec definitions for hardware-accelerated encryption"
       device_types:
         - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9500 Series Switches
+        - product_family: Switches and Hubs
           product_series: Cisco Catalyst 9000 Series Virtual Switches
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9300 Series Switches
+        - product_family: Switches and Hubs
+          product_series: Cisco Catalyst 9400 Series Switches
       failure_policy: ABORT_TARGET_ON_ERROR
       language: JINJA
       template_name: DEFN-IPSEC.j2
@@ -487,3 +535,6 @@ template_details:
       profile_names: 
         - switching-template_profile
         - switching_profile
+        - switching_profile_india
+
+

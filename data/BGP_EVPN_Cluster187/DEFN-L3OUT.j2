@@ -1,0 +1,27 @@
+{## CATC: productFamily=Switches and Hubs, softwareType=IOS-XE, productSeries=Cisco Catalyst 9000 Series Virtual Switches ##}
+{% set DEFN_L3OUT = [
+  {
+    'vrf': 'red',
+    'node': 'TB16-Spine.solutionsanity.com',
+    'neighbour_asn': '65002',
+    'interfaces': {
+      'GigabitEthernet2/0/8.2': {'parent': 'GigabitEthernet2/0/8', 'name': 'uplink1', 'vlan': '2', 'ipaddr': '10.255.255.1 255.255.255.252', 'neighbour': '10.255.255.2'},
+      'GigabitEthernet2/0/9.2': {'parent': 'GigabitEthernet2/0/9', 'name': 'uplink2', 'vlan': '2', 'ipaddr': '10.255.255.5 255.255.255.252', 'neighbour': '10.255.255.6'}
+    }
+  },
+  {
+    'vrf': 'red',
+    'node': 'TB16-SJ-Border-3.solutionsanity.com',
+    'neighbour_asn': '65002',
+    'interfaces': {
+      'GigabitEthernet3/0/8.2': {'parent': 'GigabitEthernet3/0/8', 'name': 'uplink1', 'vlan': '2', 'ipaddr': '10.255.255.13 255.255.255.252', 'neighbour': '10.255.255.14'},
+      'GigabitEthernet3/0/9.2': {'parent': 'GigabitEthernet3/0/9', 'name': 'uplink2', 'vlan': '2', 'ipaddr': '10.255.255.9 255.255.255.252', 'neighbour': '10.255.255.10'}
+    }
+  }
+] %}
+
+{% set DEFN_L3OUT_AGGREGATES = ["10.1.11.0 255.255.255.0",
+                                "10.2.22.0 255.255.255.0"]
+%}
+
+{# End of File #}
