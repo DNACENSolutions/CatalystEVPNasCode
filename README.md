@@ -121,8 +121,8 @@ device_credentials:
       cli_credential:
         - description: switchandwlc credentials
           username: wlcaccess
-          password: "{{ vault_device_password }}"
-          enable_password: "{{ vault_device_enable_password }}"
+          password: "{{ lookup('env', 'DEVICE_PASSWORD') }}"
+          enable_password: "{{ lookup('env', 'DEVICE_ENABLE_PASSWORD') }}"
       snmp_v3:
         - description: snmpV3 Sample 1
           username: admin
@@ -137,10 +137,12 @@ ise_radius_integration_details:
   - authentication_policy_server:
     - server_type: ISE
       server_ip_address: 10.195.243.126
-      shared_secret: "{{ vault_ise_radius_shared_secret }}"
+      shared_secret: "{{ lookup('env', 'ISE_RADIUS_SHARED_SECRET') }}"
       protocol: RADIUS
       role: primary
 ```
+
+Credential values are read from environment variables. Copy `.env.sh.example` to `.env.sh`, set the rotated values locally, and source that file before running Ansible. `.env.sh` is ignored by Git.
 
 ## 🚀 Deployment
 

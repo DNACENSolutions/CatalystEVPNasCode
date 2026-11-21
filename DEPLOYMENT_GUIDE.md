@@ -137,9 +137,9 @@ Cisco DNAC Collection: Latest version
 
 4. **Set Environment Variables:**
    ```bash
-   export HOSTNAME="your-dnac-hostname.domain.com"
-   export USERNAME="admin"
-   export PASSWORD="${CATALYST_CENTER_PASSWORD:?Set this from a secret manager}"
+   cp .env.sh.example .env.sh
+   # Set the rotated values in .env.sh, then load them:
+   source .env.sh
    ```
 
 ### Step 2: Configuration Customization
@@ -154,11 +154,11 @@ global_settings:
   catalyst_center:
     hostname: "dnac.yourcompany.com"
     username: "admin"
-    password: "{{ vault_device_password }}"
+    password: "{{ lookup('env', 'CATCPASSWORD') }}"
   
   ise_integration:
     primary_server_address: "10.1.1.100"
-    shared_secret: "{{ vault_ise_radius_shared_secret }}"
+    shared_secret: "{{ lookup('env', 'ISE_RADIUS_SHARED_SECRET') }}"
 ```
 
 **Site-Specific Configuration:**

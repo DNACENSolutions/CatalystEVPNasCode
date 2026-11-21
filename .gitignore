@@ -77,3 +77,4 @@ nac-validate
 nac-validate/
 
 /net-commander
+.env.sh
